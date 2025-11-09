@@ -1,159 +1,244 @@
-# Brainstorm – Multi-Agent Handover (2025-11-09) — MVP aligned
+# Brainstorming Session: Multi-Agent Handover Protocol
 
-## MVP principles
-- **Single orchestrator (FastAPI)**; no external “agent runtime”. Roles (**Reader**, **Coach**) implementeres som interne services/funksjoner.
-- **Synchronous path** end-to-end (no queues). One request → one response.
-- **Versioned JSON contract** between Reader → Coach (`contract_version: "v0"`).
-- **Traceability**: a `trace_id` is generated once and propagated through all logs and payloads.
-- **Quality gate**: abort if OCR/text quality is too low or if no usable text exists.
-- **Note**: Gemini CLI har **ikke** sub-agenter; all rolle-orkestrering skjer i FastAPI.
+**Date:** 2025-11-09
+**Attendees:** Gemini, BMM Team
 
-## Orchestrator flow (single endpoint)
-1) **Client → POST** `/v0/generate-study-guide` with file (already validated for type/size/lang).
-2) **Orchestrator**
-   - Create `trace_id`.
-   - Call **Reader** with `fileRef`.
-3) **Reader**
-   - Returns **Reader→Coach payload (v0)** (see schema below).
-4) **Orchestrator**
-   - Validate payload against JSON Schema.
-   - Check quality gate (`ocr_confidence_score` and non-empty text).
-   - If fail → **422** with actionable message.
-5) **Orchestrator → Coach**
-   - Send validated payload to **Coach**.
-6) **Coach**
-   - Returns study materials (quiz + optional flashcards).
-7) **Orchestrator → Client**
-   - `200 OK` with Coach output + `trace_id`.
+## Objective
+Define a clear and structured data handover protocol between the "Reader Agent" and the "Coach Agent" to ensure seamless collaboration and high-quality output.
 
-## Reader → Coach JSON (v0)
-Minimal, page-grounded text is the **source of truth**. Summaries/keywords are hints only.
+---
+
+### 1. The Core Problem
+
+The "Reader Agent" consumes raw source material and produces structured, summarized information. The "Coach Agent" needs this structured information—not the raw text—to generate effective learning materials (quizzes, flashcards).
+
+How do we format the data package (the "handover object") that the Reader sends to the Coach?
+
+---
+
+### 2. Proposed Handover Object (`HandoverV1`)
+
+We propose a JSON object that serves as the standard data transfer object (DTO) between agents.
+
+**`HandoverV1` JSON Schema:**
 
 ```json
 {
-  "contract_version": "v0",
-  "trace_id": "uuid",
-  "doc_meta": {
-    "filename": "lecture_notes.pdf",
-    "filetype": "pdf",
-    "pages": 15
+  "metadata": {
+    "sessionId": "uuid-string-12345",
+    "sourceTitle": "Introduction to Quantum Physics",
+    "sourceHash": "sha256-of-raw-content",
+    "language": "en",
+    "generatedAt": "2025-11-09T14:30:00Z"
   },
-  "quality": {
-    "ocr_confidence_score": 0.92,
-    "unreadable_pages": [12]
+  "context": {
+    "fullSummary": "A comprehensive summary of the entire document, written in clear, concise language. This serves as the main narrative context for the Coach Agent.",
+    "keyConcepts": [
+      {
+        "term": "Quantum Superposition",
+        "definition": "The principle that a quantum system can exist in multiple states at the same time until it is measured.",
+        "relevance": "High"
+      },
+      {
+        "term": "Entanglement",
+        "definition": "A phenomenon where two or more quantum particles are linked in such a way that their fates are intertwined, regardless of the distance separating them.",
+        "relevance": "High"
+      },
+      {
+        "term": "Wave-Particle Duality",
+        "definition": "The concept that every particle or quantum entity may be described as either a particle or a wave.",
+        "relevance": "Medium"
+      }
+    ],
+    "mainSections": [
+      {
+        "sectionTitle": "Chapter 1: The Basics",
+        "sectionSummary": "This section introduces the fundamental ideas of quantum mechanics, contrasting it with classical physics.",
+        "contentRef": "pages 1-5"
+      },
+      {
+        "sectionTitle": "Chapter 2: Core Principles",
+        "sectionSummary": "Explores superposition and entanglement in detail with examples.",
+        "contentRef": "pages 6-12"
+      }
+    ]
   },
-  "sections": [
-    {
-      "section_id": "page_1_para_1",
-      "page_number": 1,
-      "text": "The mitochondrion is a double-membraned organelle…"
+  "instructions_for_coach": {
+    "targetAudience": "University Student (Beginner)",
+    "generationGoals": ["flashcards", "multiple_choice_quiz"],
+    "focusAreas": [
+      "Quantum Superposition",
+      "Entanglement"
+    ],
+    "constraints": {
+      "numFlashcards": 15,
+      "numQuizQuestions": 10,
+      "quizDifficulty": "easy"
     }
-  ],
-  "summary_bullets": [
-    "Mitochondria generate ATP."
-  ],
-  "key_terms": ["Mitochondria", "ATP", "Cellular respiration"]
-}
-1```
-
-### Coach output (v0)
-Keep it small and consistent with Quiz Engine.
-
-```json
-{
-  "trace_id": "uuid",
-  "quiz_items": [
-    {
-      "itemType": "MCQ",
-      "question": "Which organelle is known as the powerhouse of the cell?",
-      "options": ["Nucleus", "Ribosome", "Mitochondrion"],
-      "correctAnswerIndex": 2,
-      "source_span": ["page_1_para_1"]
-    }
-  ],
-  "flashcards": [
-    {
-      "front": "Primary role of the mitochondrion?",
-      "back": "Generates ATP.",
-      "source_span": ["page_1_para_1"]
-    }
-  ]
-}
-```
-
-## JSON Schema (abridged) — validation at the orchestrator
-> Use Pydantic or `jsonschema` to enforce shape.
-
-```json
-{
-  "$id": "reader-coach-v0",
-  "type": "object",
-  "required": ["contract_version","trace_id","doc_meta","quality","sections"],
-  "properties": {
-    "contract_version": { "const": "v0" },
-    "trace_id": { "type": "string" },
-    "doc_meta": {
-      "type": "object",
-      "required": ["filename","filetype","pages"],
-      "properties": {
-        "filename": { "type": "string" },
-        "filetype": { "enum": ["pdf","docx","pptx","txt","md"] },
-        "pages": { "type": "integer", "minimum": 1 }
-      }
-    },
-    "quality": {
-      "type": "object",
-      "required": ["ocr_confidence_score"],
-      "properties": {
-        "ocr_confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
-        "unreadable_pages": { "type": "array", "items": { "type": "integer", "minimum": 1 } }
-      }
-    },
-    "sections": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["section_id","page_number","text"],
-        "properties": {
-          "section_id": { "type": "string" },
-          "page_number": { "type": "integer", "minimum": 1 },
-          "text": { "type": "string", "minLength": 1 }
-        }
-      }
-    },
-    "summary_bullets": { "type": "array", "items": { "type": "string" } },
-    "key_terms": { "type": "array", "items": { "type": "string" } }
   }
 }
 ```
 
-## Quality gate (MVP)
-- **Fail if** `ocr_confidence_score < 0.85` **or** total extracted text length < **N** (e.g., 500 chars).
-- Response: **422 Unprocessable Entity**  
-  `"Processing failed: document quality too low (confidence 0.63). Please try a clearer copy."`
+---
 
-## Errors (standardized)
-- **400** Invalid contract (schema validation failed).
-- **422** Quality gate failed / empty text.
-- **502** LLM upstream error (Coach). Include `trace_id` and `stage: "coach_infer"`.
+### 3. Breakdown of the `HandoverV1` Object
 
-## Observability
-- Every log line: `{ trace_id, stage, agent, duration_ms, status }`
-- Stages: `upload`, `reader_infer`, `contract_validate`, `coach_infer`, `respond`
-- Capture token usage (if available) under `coach_infer.tokens_total`
-- Logs to stdout in JSON; central collector aggregates by `trace_id`.
+#### `metadata`
+- **Purpose:** For tracking, logging, and debugging.
+- **`sessionId`:** Links the entire process to a user's session.
+- **`sourceHash`:** Allows caching. If the same file is uploaded again, we can skip the "Reader Agent" step if the hash matches.
+- **`language`:** Ensures the "Coach Agent" generates content in the correct language (NO/EN).
 
-## Non-goals (MVP)
-- Async queues / PubSub / callbacks.
-- Multi-turn agent feedback loops.
-- Cross-document or RAG retrieval.
-- Dynamic agent selection/routing. (Static: Reader→Coach.)
+#### `context`
+- **Purpose:** This is the core knowledge base for the "Coach Agent". It's everything the Coach needs to know about the source material.
+- **`fullSummary`:** The primary narrative. The Coach can use this to understand the overall topic and generate high-level questions.
+- **`keyConcepts`:** A structured list of important terms and definitions. Perfect for generating flashcards. The `relevance` flag helps prioritize.
+- **`mainSections`:** A breakdown of the document's structure. The Coach can use this to create section-specific questions or to understand the flow of the material.
 
-## Risks & mitigations
-- **Schema drift** → versioned contract (`v0`), schema validation, backward-compat routes.
-- **Reader quality varies** → gate on confidence & text length; show actionable errors.
-- **Debugging complexity** → strict trace/log schema, fixed stages, single orchestrator.
+#### `instructions_for_coach`
+- **Purpose:** A direct command from the "Orchestrator" (the main backend service) to the "Coach Agent".
+- **`targetAudience`:** Helps the Coach tailor the tone and complexity of the questions.
+- **`generationGoals`:** Tells the Coach what to create (e.g., just a quiz, or flashcards and a quiz).
+- **`focusAreas`:** Allows for adaptive learning. If a user struggles with certain topics, the orchestrator can instruct the Coach to generate more questions on those `keyConcepts`.
+- **`constraints`:** Defines the shape of the output (e.g., how many questions to generate).
 
-## Decision
-Keep **Reader→Coach** handover explicit and **schema-validated** under a **single, synchronous orchestrator** with strict quality gates and full traceability. Post-MVP can introduce async scaling, agent routing, and richer feedback loops.
+---
+
+### 4. The Agent Workflow (Putting it all together)
+
+1.  **User Uploads File**
+    - The `Orchestrator` service receives the file.
+    - It creates a `sessionId` and stores the file.
+
+2.  **Orchestrator calls Reader Agent**
+    - **Input:** Raw content (text, OCR output, or transcript).
+    - **Prompt for Reader Agent:**
+      > "You are a Reader Agent. Analyze the following text about [Source Title].
+      > 1.  Create a concise, comprehensive summary (`fullSummary`).
+      > 2.  Identify the top 5-10 `keyConcepts`. For each, provide the term, a clear definition, and a relevance score (High, Medium, Low).
+      > 3.  Break the document down into its `mainSections`. Provide a title and a brief summary for each section.
+      > Your output must be a JSON object containing `fullSummary`, `keyConcepts`, and `mainSections`."
+
+3.  **Reader Agent Responds**
+    - The Reader Agent processes the text and returns a JSON object with the `context` part of our `HandoverV1` object.
+
+4.  **Orchestrator Prepares for Coach Agent**
+    - The Orchestrator takes the `context` from the Reader.
+    - It adds the `metadata` and `instructions_for_coach` sections to create the full `HandoverV1` object.
+    - The `instructions_for_coach` are determined by the user's request (e.g., they clicked "Generate Quiz").
+
+5.  **Orchestrator calls Coach Agent**
+    - **Input:** The complete `HandoverV1` JSON object.
+    - **Prompt for Coach Agent:**
+      > "You are a Coach Agent. Based on the provided JSON data, your task is to generate learning materials.
+      > **Context:** The user is studying '[Source Title]'. The key concepts are [list of key concepts].
+      > **Your Goal:** Fulfill the instructions in the `instructions_for_coach` section.
+      > **Rules:**
+      > - Generate exactly `numFlashcards` flashcards from the `keyConcepts`.
+      > - Generate exactly `numQuizQuestions` multiple-choice questions based on the `fullSummary` and `mainSections`.
+      > - Ensure questions are suitable for a `targetAudience`.
+      > - Prioritize the `focusAreas` when creating questions.
+      > Your output must be a JSON object containing two keys: `flashcards` (an array of {question, answer}) and `quiz` (an array of {question, options, correctAnswerIndex})."
+
+6.  **Coach Agent Responds**
+    - The Coach Agent returns the final JSON with the learning materials.
+
+7.  **Orchestrator Saves and Displays**
+    - The Orchestrator saves the generated content to the database and sends it to the frontend.
+
+---
+### 5. Contracts & Shared State
+
+To ensure deterministic behavior, all communication between agents (nodes) and the central state are strictly defined.
+
+#### Message Contracts
+
+- **`ReaderOutput`**: Produced by the Reader Agent.
+  ```json
+  {
+    "extracted_blocks": [
+      { "block_id": "p1", "text": "...", "source_page": 1 }
+    ],
+    "doc_meta": { "title": "...", "language": "en" }
+  }
+  ```
+  - **Validation**: `extracted_blocks` must be a non-empty array. Each block must have a `block_id` and `text`.
+
+- **`QuizSpec`**: Sent to the Coach Agent to request a quiz.
+  ```json
+  {
+    "blocks_to_assess": ["p1", "p3"],
+    "num_questions": 5,
+    "difficulty": "MEDIUM"
+  }
+  ```
+  - **Validation**: `blocks_to_assess` must contain valid `block_id`s. `num_questions` must be > 0.
+
+- **`QuizResults`**: Produced by the frontend/quiz engine after a user completes a quiz.
+  ```json
+  {
+    "quiz_id": "uuid",
+    "answers": [
+      { "item_id": "q1", "is_correct": true, "latency_sec": 12 },
+      { "item_id": "q2", "is_correct": false, "latency_sec": 25 }
+    ]
+  }
+  ```
+  - **Validation**: `quiz_id` must be valid. `answers` array must match the number of questions.
+
+- **`CoachNotes`**: Asynchronous feedback from the Coach Agent about user performance.
+  ```json
+  {
+    "notes": [
+      "User struggles with 'Quantum Entanglement'.",
+      "User consistently answers `HARD` questions incorrectly."
+    ]
+  }
+  ```
+
+#### Single Source of Truth: `SessionState`
+
+A single, unified state object is maintained by the orchestrator for the lifecycle of a study session.
+
+```json
+{
+  "session_id": "uuid-123",
+  "user_id": "user-abc",
+  "doc_meta": {
+    "filename": "lecture.pdf",
+    "uploaded_at": "timestamp"
+  },
+  "extracted_blocks": [
+    { "block_id": "p1", "text": "...", "source_page": 1 }
+  ],
+  "quiz_items": [
+    { "item_id": "q1", "question": "...", "difficulty": "MEDIUM" }
+  ],
+  "results": [
+    { "item_id": "q1", "is_correct": true, "timestamp": "..." }
+  ],
+  "notes": [
+    "User struggles with 'Quantum Entanglement'."
+  ]
+}
+```
+
+---
+### 6. Error Taxonomy & Retries
+
+- **`400 Bad Request`**: Invalid message contract. The request body fails Pydantic/JSON schema validation. No retry.
+- **`422 Unprocessable Entity`**: The input is valid, but fails a quality gate (e.g., OCR confidence too low, text too short). No retry; requires user action.
+- **`502 Bad Gateway`**: An upstream AI service (e.g., Gemini) fails.
+  - **Retry Policy**: Implement exponential backoff.
+    - 1st retry: after 1 second.
+    - 2nd retry: after 3 seconds.
+    - 3rd retry: after 5 seconds.
+  - If all retries fail, return a `502` to the client with a `trace_id` for debugging.
+- **`504 Gateway Timeout`**: An upstream AI service takes too long to respond. Same retry policy as `502`.
+
+---
+### Advantages of this Protocol
+- **Decoupled:** The Reader and Coach agents don't need to know about each other. They only communicate through the Orchestrator via the `HandoverV1` object.
+- **Structured & Predictable:** Using a clear JSON schema makes the process reliable and easy to debug.
+- **Extensible:** We can add new fields to the `HandoverV1` object later. For example, we could add a `diagrams` array if the Reader Agent can identify and describe images.
+- **Testable:** We can easily write unit tests for each agent by feeding them mock `HandoverV1` objects.
