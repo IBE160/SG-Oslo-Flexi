@@ -237,6 +237,61 @@ A single, unified state object is maintained by the orchestrator for the lifecyc
 - **`504 Gateway Timeout`**: An upstream AI service takes too long to respond. Same retry policy as `502`.
 
 ---
+### 7. Observability
+
+To ensure transparency and debuggability of the multi-agent workflow, detailed logs will be captured at each stage.
+
+- **Per-Node Logging**: Each agent (Reader, Coach) and the Orchestrator will log:
+  - `input_hash`: SHA256 hash of the input payload.
+  - `output_hash`: SHA256 hash of the output payload.
+  - `duration_ms`: Time taken for the agent to process the request.
+  - `tokens_used`: Number of tokens consumed by the LLM (if applicable).
+  - `errors`: Any errors encountered during processing.
+- **Trace ID**: The `session_id` will serve as the `trace_id`, propagated across all logs for a given session.
+- **Structured Logs**: All logs will be in JSONL format, making them easy to parse and aggregate by a central logging system.
+
+---
+### 8. E2E Scenarios
+
+These scenarios define the critical end-to-end paths that must be tested to ensure the multi-agent system functions as expected.
+
+- **Happy Path (Text-based PDF)**:
+  - **Scenario**: User uploads a clean, text-based PDF.
+  - **Expected Flow**: PDF -> Reader Agent (pdfminer) -> Orchestrator -> Coach Agent -> Quiz/Flashcards.
+  - **Acceptance Criteria**:
+    - Quiz and flashcards are generated successfully.
+    - Content is accurate and relevant to the input PDF.
+    - Response time is within acceptable limits (e.g., < 30 seconds).
+
+- **Fallback Path (Scanned PDF with OCR)**:
+  - **Scenario**: User uploads a clean, scanned PDF.
+  - **Expected Flow**: PDF -> OCR Pipeline (OCRmyPDF) -> Reader Agent -> Orchestrator -> Coach Agent -> Quiz/Flashcards.
+  - **Acceptance Criteria**:
+    - Quiz and flashcards are generated successfully.
+    - Content is accurate and relevant to the input PDF (allowing for minor OCR imperfections).
+    - OCR confidence score is logged and above the threshold.
+
+- **Low-Confidence Triggers Manual Review**:
+  - **Scenario**: User uploads a low-quality scanned PDF.
+  - **Expected Flow**: PDF -> OCR Pipeline (OCRmyPDF) -> Orchestrator flags for manual review.
+  - **Acceptance Criteria**:
+    - The system returns a `422 Unprocessable Entity` with a clear message.
+    - The session state indicates a pending manual review.
+    - No quiz or flashcards are generated.
+
+---
+### 9. Build Checklist (MVP)
+
+- [ ] Implement the Orchestrator service to manage agent calls.
+- [ ] Define and implement Pydantic models for all message contracts (`ReaderOutput`, `QuizSpec`, `QuizResults`, `CoachNotes`).
+- [ ] Implement the `SessionState` object and its persistence.
+- [ ] Integrate the Reader Agent with the OCR pipeline.
+- [ ] Integrate the Coach Agent with the Quiz Engine.
+- [ ] Implement the error taxonomy and retry logic for upstream AI calls.
+- [ ] Set up structured logging with `session_id` as `trace_id`.
+- [ ] Develop E2E tests for the happy path, fallback path, and low-confidence scenarios.
+
+---
 ### Advantages of this Protocol
 - **Decoupled:** The Reader and Coach agents don't need to know about each other. They only communicate through the Orchestrator via the `HandoverV1` object.
 - **Structured & Predictable:** Using a clear JSON schema makes the process reliable and easy to debug.

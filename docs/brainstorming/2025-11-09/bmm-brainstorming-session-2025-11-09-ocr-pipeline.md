@@ -120,3 +120,18 @@ This section outlines the testing strategy for the OCR pipeline.
 - **AC2**: Clean, scanned PDFs (300 DPI) are processed with >=80% character accuracy.
 - **AC3**: Low-quality scans reliably trigger the manual review step.
 - **AC4**: The presence of tables is either detected and flagged, or the extracted text is accepted as-is (no structural guarantee for MVP).
+
+---
+## Related Docs
+- [Multi-Agent Handover Protocol](../bmm-brainstorming-session-2025-11-09-multi-agent-handover.md)
+- [Quiz Engine & Progress Tracking](../bmm-brainstorming-session-2025-11-09-quiz-engine.md)
+
+---
+## Build Checklist (MVP)
+- [ ] Implement PDF type detection (text-based vs. image-based).
+- [ ] Integrate `pdfminer` or `pdfplumber` for text extraction from text-based PDFs.
+- [ ] Integrate `OCRmyPDF` and `Tesseract` for scanned PDFs.
+- [ ] Implement confidence scoring and the manual review trigger.
+- [ ] Set up temporary file storage and cleanup.
+- [ ] Develop the UI for user review and correction of OCR output.
+- [ ] Ensure all extracted text is passed to the Reader Agent.

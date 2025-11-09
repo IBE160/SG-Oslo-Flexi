@@ -267,3 +267,19 @@ For portability, quizzes can be exported to standard Learning Management System 
 - Develop the logic for shuffling answers.
 - Build the post-quiz summary screen.
 - **Future Enhancement**: Investigate a full Item Response Theory (IRT) model for more sophisticated adaptive difficulty.
+
+---
+## Related Docs
+- [OCR Pipeline Specification](../brainstorming/2025-11-09/bmm-brainstorming-session-2025-11-09-ocr-pipeline.md)
+- [Multi-Agent Handover Protocol](../bmm-brainstorming-session-2025-11-09-multi-agent-handover.md)
+
+---
+## Build Checklist (MVP)
+- [ ] Implement quiz data models in PostgreSQL.
+- [ ] Develop API endpoints for fetching, submitting answers, and completing quizzes.
+- [ ] Implement answer shuffling logic on the backend.
+- [ ] Build the frontend UI for quiz taking and immediate feedback.
+- [ ] Create the post-quiz summary screen with score and feedback.
+- [ ] Implement the lightweight adaptive difficulty progression rules.
+- [ ] Develop the logic for deriving user weaknesses from quiz results.
+- [ ] Implement basic QTI and Moodle XML export functionality.
