@@ -1,36 +1,43 @@
-# Brainstorm – Core features (2025-11-09)
+# Brainstorm – Core Features (2025-11-09) — MVP aligned
 
-- **Must-haves**
-    - User can upload a document (e.g., PDF, PNG, JPG).
-    - Document text is extracted via an OCR pipeline.
-    - User can ask clarifying questions about the uploaded document.
-    - AI provides answers grounded in the document's content.
-    - User can request a quiz based on the document.
-    - A simple quiz (e.g., 5 multiple-choice questions) is generated.
-    - User receives a score upon quiz completion.
+## Must-haves (MVP)
+- **Upload a single document**, with validation:
+  - Formats: **PDF, DOCX, PPTX, TXT, MD**
+  - Language: **English only (MVP)**
+  - Size: **≤ 20 MB**
+- **OCR text extraction** for scans/images inside PDFs via **Google Cloud Vision**.
+- **Ask questions** about the uploaded document; answers must be grounded **only** in that document.
+- **Generate a simple quiz** (e.g., **5 multiple-choice** questions) with correct answer key and brief explanations.
+- **Score & review**: user sees score and which answers were right/wrong.
+- **Clear UI states**: Upload → Processing → Quiz → Results.
+- **Error handling**: unsupported format/oversized file, OCR failure, or empty text.
 
-- **Should-haves**
-    - Support for a wider range of document formats (DOCX, TXT).
-    - Ability to select specific sections of a document for quiz generation.
-    - Conversation and quiz history saved for the user.
-    - More varied quiz question types (e.g., true/false, open-ended).
-    - Ability to share quiz results.
+## Should-haves
+- Select specific sections of a document for quiz generation.
+- Conversation & quiz history saved to user profile.
+- More question types (true/false, short answer).
+- Share/export quiz results.
+- Let the user **review & edit extracted text** before quiz/Q&A.
+- Additional languages and image uploads (PNG/JPG) beyond MVP.
 
-- **Dependencies**
-    - **OCR Service:** A reliable OCR engine (e.g., Google Cloud Vision, Tesseract) to accurately extract text.
-    - **Language Model (LLM):** A powerful LLM (e.g., Gemini) for Q&A and quiz generation.
-    - **Vector Database:** For storing document embeddings to enable efficient, context-aware Q&A (RAG).
-    - **Cloud Infrastructure:** Scalable hosting for the backend, frontend, and document storage.
+## Dependencies (MVP)
+- **OCR**: Google Cloud Vision (managed, accurate, fast).
+- **LLM**: Gemini (Q&A and quiz generation).
+- **Backend**: FastAPI (orchestration) + persistent storage for documents and results.
+- **Frontend**: React-based SPA.
+- **Note**: **No Vector DB/RAG in MVP** (see Post-MVP).
 
-- **Risks & mitigations**
-    - **Risk:** Inaccurate OCR output corrupts the context for the LLM.
-        - **Mitigation:** Use high-quality OCR services. Implement image pre-processing to enhance quality. Allow users to review and correct extracted text as a "should-have" feature.
-    - **Risk:** LLM generates irrelevant or incorrect ("hallucinated") quiz questions/answers.
-        - **Mitigation:** Employ a strong RAG (Retrieval-Augmented Generation) pattern to ensure the LLM is strictly grounded in the document's content. Fine-tune prompts for accuracy.
-    - **Risk:** Poor user experience from a slow or confusing interface.
-        - **Mitigation:** Focus on a simple, clean UI. Implement asynchronous processing for document uploads and quiz generation with clear status indicators.
-    - **Risk:** Data privacy concerns with user-uploaded documents.
-        - **Mitigation:** Implement strict data handling policies, encrypt documents at rest and in transit, and be transparent with users.
+## Non-goals for MVP (explicit)
+- **RAG / Vector Database** for retrieval over large corpora.
+- **Multi-document** projects or cross-document reasoning.
+- **Asynchronous background pipelines** (keep synchronous path for MVP; scale later).
+- **Multi-agent “sub-agents”** (orchestrate roles inside FastAPI if needed, no separate agent runtime).
 
-- **Proposed decision**
-The MVP will focus on the single-document "upload-and-quiz" workflow. This provides a complete, testable user journey that validates the core value proposition of turning static documents into interactive learning tools.
+## Risks & mitigations
+- **OCR inaccuracies** → use Cloud Vision; basic image pre-processing; allow post-OCR text review (Should-have).
+- **LLM hallucination** → strict prompts that quote source spans; chunking + narrow context windows; add a small **golden set** of doc→QA pairs for regression checks.
+- **Sluggish UX** → streaming responses where possible; clear progress indicators; upfront file validation.
+- **Privacy** → encrypt at rest/in transit; short default retention; user-triggered delete/purge.
+
+## Proposed decision
+Focus MVP on the **single-document “upload → understand → quiz → score”** journey to validate the core value: turning static documents into interactive learning.
