@@ -82,3 +82,41 @@ The pipeline's primary output is a clean string of text.
 - **Next Step**: Implement the `pdfminer` path for text-based PDFs.
 - **Next Step**: Implement the `OCRmyPDF` path for scanned PDFs.
 - **Next Step**: Create the UI for the manual review step.
+
+## 9. Testing & Acceptance
+
+This section outlines the testing strategy for the OCR pipeline.
+
+- **Unit Tests**:
+  - **File Type Detector**: Test the function that determines if a PDF is text-based or image-based.
+  - **Parsers**: Test the `pdfminer` and `OCRmyPDF` wrappers in isolation.
+  - **Confidence Scorer**: Test the logic that calculates and applies the confidence threshold.
+
+- **Integration Tests**:
+  - The full pipeline (`PDF -> plain_text`) will be tested using a set of fixture files.
+  - The output text will be compared against a known-good ground truth file.
+
+- **Smoke Tests**:
+  - A simple end-to-end test verifying that a valid PDF can be uploaded and returns a non-empty text result within a reasonable time (<15 seconds for a simple document).
+  - The output schema is validated.
+
+- **Postponed for MVP**:
+  - Performance testing with very large files.
+  - Testing on a wide variety of complex, multi-column layouts.
+
+### Test Fixtures
+
+| Filename | Description | Expected Outcome |
+|---|---|---|
+| `text_simple.pdf` | A standard, text-based PDF. | Pass (pdfminer), >99% accuracy. |
+| `scan_clean.pdf` | A clean, 300 DPI scanned PDF. | Pass (OCRmyPDF), >95% accuracy. |
+| `scan_low_contrast.pdf` | A poorly lit, low-contrast scan. | Fail, triggers manual review (<90% confidence). |
+| `scan_rotated.pdf` | A scan where the page is rotated 90 degrees. | Pass (OCRmyPDF), >90% accuracy (de-skew works). |
+| `layout_tables.pdf` | A PDF containing large tables. | Pass, text is extracted but may not be perfectly formatted. Table structure is not guaranteed for MVP. |
+
+### Acceptance Criteria
+
+- **AC1**: Text-based PDFs are processed with >=95% character accuracy.
+- **AC2**: Clean, scanned PDFs (300 DPI) are processed with >=80% character accuracy.
+- **AC3**: Low-quality scans reliably trigger the manual review step.
+- **AC4**: The presence of tables is either detected and flagged, or the extracted text is accepted as-is (no structural guarantee for MVP).
