@@ -1,95 +1,159 @@
-# Brainstorm – Multi-Agent Handover (2025-11-09)
+# Brainstorm – Multi-Agent Handover (2025-11-09) — MVP aligned
 
-- **Must-haves (MVP)**
-    - A clearly defined and versioned JSON contract for the data payload passed from the Reader agent to the Coach agent.
-    - A central orchestrator service that manages the sequential execution of the agent workflow (Client → Orchestrator → Reader → Coach → Client).
-    - A unique `trace_id` must be generated for every request and passed through the entire call chain for observability.
-    - A simple, non-negotiable quality gate: if the Reader's OCR confidence score is below a set threshold, the handover is aborted, and an error is returned.
-    - The orchestrator is responsible for validating the JSON contract before executing the handover.
+## MVP principles
+- **Single orchestrator (FastAPI)**; no external “agent runtime”. Roles (**Reader**, **Coach**) implementeres som interne services/funksjoner.
+- **Synchronous path** end-to-end (no queues). One request → one response.
+- **Versioned JSON contract** between Reader → Coach (`contract_version: "v0"`).
+- **Traceability**: a `trace_id` is generated once and propagated through all logs and payloads.
+- **Quality gate**: abort if OCR/text quality is too low or if no usable text exists.
+- **Note**: Gemini CLI har **ikke** sub-agenter; all rolle-orkestrering skjer i FastAPI.
 
-- **Should-haves (next)**
-    - Implement a retry mechanism with exponential backoff for transient failures in agent communication.
-    - Introduce a fallback rule: if the primary Coach agent (e.g., a powerful but expensive LLM) fails, retry with a simpler, more reliable model.
-    - Allow the Coach to send feedback back to the Reader (e.g., "sections were too long") for future adaptive processing.
-    - Version the agents themselves, allowing the orchestrator to route requests to specific agent versions.
+## Orchestrator flow (single endpoint)
+1) **Client → POST** `/v0/generate-study-guide` with file (already validated for type/size/lang).
+2) **Orchestrator**
+   - Create `trace_id`.
+   - Call **Reader** with `fileRef`.
+3) **Reader**
+   - Returns **Reader→Coach payload (v0)** (see schema below).
+4) **Orchestrator**
+   - Validate payload against JSON Schema.
+   - Check quality gate (`ocr_confidence_score` and non-empty text).
+   - If fail → **422** with actionable message.
+5) **Orchestrator → Coach**
+   - Send validated payload to **Coach**.
+6) **Coach**
+   - Returns study materials (quiz + optional flashcards).
+7) **Orchestrator → Client**
+   - `200 OK` with Coach output + `trace_id`.
 
-- **Reader → Coach JSON contract (v0)**
-    - The **Reader** agent produces the following payload after processing a document.
+## Reader → Coach JSON (v0)
+Minimal, page-grounded text is the **source of truth**. Summaries/keywords are hints only.
 
-    ```json
+```json
+{
+  "contract_version": "v0",
+  "trace_id": "uuid",
+  "doc_meta": {
+    "filename": "lecture_notes.pdf",
+    "filetype": "pdf",
+    "pages": 15
+  },
+  "quality": {
+    "ocr_confidence_score": 0.92,
+    "unreadable_pages": [12]
+  },
+  "sections": [
     {
-      "contract_version": "v0",
-      "trace_id": "uuid-for-this-specific-request",
-      "doc_meta": {
-        "filename": "lecture_notes.pdf",
-        "filetype": "pdf",
-        "pages": 15
-      },
-      "quality": {
-        "ocr_confidence_score": 0.92,
-        "unreadable_pages": [12]
-      },
-      "key_terms": ["Mitochondria", "ATP", "Cellular Respiration"],
-      "summary_bullets": [
-        "Mitochondria are the powerhouse of the cell.",
-        "They generate most of the cell's supply of adenosine triphosphate (ATP)."
-      ],
-      "sections": [
-        {
-          "section_id": "page_1_para_1",
-          "page_number": 1,
-          "text": "The mitochondrion is a double-membraned organelle found in most eukaryotic organisms..."
-        }
-      ]
+      "section_id": "page_1_para_1",
+      "page_number": 1,
+      "text": "The mitochondrion is a double-membraned organelle…"
     }
-    ```
+  ],
+  "summary_bullets": [
+    "Mitochondria generate ATP."
+  ],
+  "key_terms": ["Mitochondria", "ATP", "Cellular respiration"]
+}
+1```
 
-    - The **Coach** agent receives the above and returns the following structure.
+### Coach output (v0)
+Keep it small and consistent with Quiz Engine.
 
-    ```json
+```json
+{
+  "trace_id": "uuid",
+  "quiz_items": [
     {
-      "trace_id": "uuid-for-this-specific-request",
-      "flashcards": [
-        {
-          "front": "What is the primary role of the mitochondrion?",
-          "back": "To generate cellular energy (ATP).",
-          "source_span": ["page_1_para_1"]
-        }
-      ],
-      "quiz_items": [
-        {
-          "itemType": "MCQ",
-          "question": "Which organelle is known as the 'powerhouse of the cell'?",
-          "options": ["Nucleus", "Ribosome", "Mitochondrion"],
-          "correctAnswerIndex": 2,
-          "source_span": ["page_1_para_1"]
-        }
-      ]
+      "itemType": "MCQ",
+      "question": "Which organelle is known as the powerhouse of the cell?",
+      "options": ["Nucleus", "Ribosome", "Mitochondrion"],
+      "correctAnswerIndex": 2,
+      "source_span": ["page_1_para_1"]
     }
-    ```
+  ],
+  "flashcards": [
+    {
+      "front": "Primary role of the mitochondrion?",
+      "back": "Generates ATP.",
+      "source_span": ["page_1_para_1"]
+    }
+  ]
+}
+```
 
-- **Orchestrator flow (single endpoint steps)**
-    1.  Client POSTs a document to the `/generate-study-guide` endpoint.
-    2.  **Orchestrator:** Generates `trace_id`. Invokes **Reader** agent with the document.
-    3.  **Reader:** Processes the document and returns the `Reader → Coach JSON contract`.
-    4.  **Orchestrator:** Validates the returned JSON. Checks `quality.ocr_confidence_score`.
-    5.  **Gate:** If score < 0.85, the orchestrator immediately returns a `422 Unprocessable Entity` error to the client.
-    6.  **Orchestrator:** If score is sufficient, it invokes the **Coach** agent with the full JSON payload.
-    7.  **Coach:** Generates learning materials (quiz, flashcards) and returns its structured JSON output.
-    8.  **Orchestrator:** Returns the Coach's payload to the client with a `200 OK` status.
+## JSON Schema (abridged) — validation at the orchestrator
+> Use Pydantic or `jsonschema` to enforce shape.
 
-- **Observability (trace IDs, timing, error logs)**
-    - **Trace IDs:** The `trace_id` is the primary key for correlating logs. It must be present in every log message related to the request.
-    - **Timing:** The orchestrator must log the execution duration for each agent call (e.g., `reader_call_duration_ms`, `coach_call_duration_ms`).
-    - **Error Logs:** All services must emit structured (JSON) logs to stdout. A centralized logging service will collect these. Errors must include the `trace_id`, agent name, function name, and a detailed error message.
+```json
+{
+  "$id": "reader-coach-v0",
+  "type": "object",
+  "required": ["contract_version","trace_id","doc_meta","quality","sections"],
+  "properties": {
+    "contract_version": { "const": "v0" },
+    "trace_id": { "type": "string" },
+    "doc_meta": {
+      "type": "object",
+      "required": ["filename","filetype","pages"],
+      "properties": {
+        "filename": { "type": "string" },
+        "filetype": { "enum": ["pdf","docx","pptx","txt","md"] },
+        "pages": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["ocr_confidence_score"],
+      "properties": {
+        "ocr_confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "unreadable_pages": { "type": "array", "items": { "type": "integer", "minimum": 1 } }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["section_id","page_number","text"],
+        "properties": {
+          "section_id": { "type": "string" },
+          "page_number": { "type": "integer", "minimum": 1 },
+          "text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "summary_bullets": { "type": "array", "items": { "type": "string" } },
+    "key_terms": { "type": "array", "items": { "type": "string" } }
+  }
+}
+```
 
-- **Risks & mitigations**
-    - **Risk: Schema Drift:** The Reader or Coach agent's API changes, breaking the contract.
-        - **Mitigation:** The orchestrator must perform schema validation on all incoming and outgoing payloads between agents. Implement versioning in the contract and endpoint routes (e.g., `/v0/invokeReader`).
-    - **Risk: Poor Intermediate Content:** The Reader's summary or key terms are low quality, poisoning the context for the Coach.
-        - **Mitigation:** The Coach should treat the `sections` text as the source of truth. The summary and key terms are supplementary context, not primary input.
-    - **Risk: Debugging Complexity:** With multiple agents, it's difficult to pinpoint the source of an error.
-        - **Mitigation:** Strict adherence to the observability plan is critical. Distributed tracing (via `trace_id`) is not a "nice-to-have"; it is a core requirement for debugging a multi-agent system.
+## Quality gate (MVP)
+- **Fail if** `ocr_confidence_score < 0.85` **or** total extracted text length < **N** (e.g., 500 chars).
+- Response: **422 Unprocessable Entity**  
+  `"Processing failed: document quality too low (confidence 0.63). Please try a clearer copy."`
 
-- **Proposed decision**
-The Reader-to-Coach handover will be explicitly managed by a central orchestrator, which enforces a versioned JSON contract and a minimum quality gate based on OCR confidence. Observability through distributed tracing (`trace_id`) and structured logging is a foundational requirement for the MVP to ensure system stability and debuggability.
+## Errors (standardized)
+- **400** Invalid contract (schema validation failed).
+- **422** Quality gate failed / empty text.
+- **502** LLM upstream error (Coach). Include `trace_id` and `stage: "coach_infer"`.
+
+## Observability
+- Every log line: `{ trace_id, stage, agent, duration_ms, status }`
+- Stages: `upload`, `reader_infer`, `contract_validate`, `coach_infer`, `respond`
+- Capture token usage (if available) under `coach_infer.tokens_total`
+- Logs to stdout in JSON; central collector aggregates by `trace_id`.
+
+## Non-goals (MVP)
+- Async queues / PubSub / callbacks.
+- Multi-turn agent feedback loops.
+- Cross-document or RAG retrieval.
+- Dynamic agent selection/routing. (Static: Reader→Coach.)
+
+## Risks & mitigations
+- **Schema drift** → versioned contract (`v0`), schema validation, backward-compat routes.
+- **Reader quality varies** → gate on confidence & text length; show actionable errors.
+- **Debugging complexity** → strict trace/log schema, fixed stages, single orchestrator.
+
+## Decision
+Keep **Reader→Coach** handover explicit and **schema-validated** under a **single, synchronous orchestrator** with strict quality gates and full traceability. Post-MVP can introduce async scaling, agent routing, and richer feedback loops.
