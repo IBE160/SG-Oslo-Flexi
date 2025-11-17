@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Buddy - Design Directions</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f8f9fa; color: #212529; }
+        .header { padding: 40px; text-align: center; background-color: #fff; border-bottom: 1px solid #dee2e6; }
+        .nav { display: flex; justify-content: center; padding: 20px; background-color: #fff; border-bottom: 1px solid #dee2e6; position: sticky; top: 0; z-index: 1000;}
+        .nav button { background: none; border: none; padding: 10px 20px; cursor: pointer; font-size: 16px; color: #6c757d; }
+        .nav button.active { color: #0d6efd; border-bottom: 2px solid #0d6efd; }
+        .container { padding: 40px; }
+        .direction { display: none; }
+        .direction.active { display: block; }
+        .mockup { background-color: #fff; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 40px; }
+        .mockup-header { padding: 20px; border-bottom: 1px solid #dee2e6; }
+        .mockup-header h3 { margin: 0; }
+        .mockup-content { padding: 40px; }
+
+        /* Common Component Styles (Focus Theme) */
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .btn-primary { background-color: #0d6efd; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .card { background-color: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; }
+
+        /* Direction-Specific Styles */
+
+        /* Direction 1: Minimalist Sidebar */
+        .dir1-layout { display: grid; grid-template-columns: 240px 1fr; gap: 40px; }
+        .dir1-sidebar { background-color: #fff; border-right: 1px solid #dee2e6; padding: 20px; }
+        .dir1-sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .dir1-sidebar li a { display: block; padding: 15px; text-decoration: none; color: #495057; border-radius: 6px; }
+        .dir1-sidebar li a.active { background-color: #e9ecef; color: #0d6efd; font-weight: 600; }
+
+        /* Direction 2: Top Navigation */
+        .dir2-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background-color: #fff; border-bottom: 1px solid #dee2e6;}
+        .dir2-nav a { margin: 0 15px; text-decoration: none; color: #495057; }
+        .dir2-nav a.active { color: #0d6efd; font-weight: 600; }
+
+        /* Direction 3: Card-Based Dashboard */
+        .dir3-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .dir3-card { text-align: center; }
+        .dir3-card h4 { margin-top: 0; }
+
+        /* Direction 4: Stepper Wizard */
+        .dir4-stepper { display: flex; justify-content: space-around; margin-bottom: 40px; }
+        .dir4-step { text-align: center; color: #6c757d; }
+        .dir4-step.active { color: #0d6efd; font-weight: 600; }
+        .dir4-step .circle { width: 30px; height: 30px; border-radius: 50%; background-color: #e9ecef; line-height: 30px; margin: 0 auto 10px; }
+        .dir4-step.active .circle { background-color: #0d6efd; color: white; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>AI Buddy - Design Directions</h1>
+        <p>Exploring different layouts and interaction patterns for the core user experience.</p>
+    </div>
+
+    <div class="nav">
+        <button onclick="showDirection(1)" class="active">1. Minimalist Sidebar</button>
+        <button onclick="showDirection(2)">2. Top Navigation</button>
+        <button onclick="showDirection(3)">3. Card-Based Dashboard</button>
+        <button onclick="showDirection(4)">4. Stepper Wizard</button>
+    </div>
+
+    <div class="container">
+        <!-- Direction 1: Minimalist Sidebar -->
+        <div id="dir1" class="direction active">
+            <h2>Direction 1: Minimalist Sidebar</h2>
+            <p>A classic, scalable layout with navigation on the left.</p>
+            <div class="mockup">
+                <div class="mockup-header"><h3>Upload Document</h3></div>
+                <div class="mockup-content dir1-layout">
+                    <div class="dir1-sidebar">
+                        <ul>
+                            <li><a href="#" class="active">New Study Session</a></li>
+                            <li><a href="#">My Study Sets</a></li>
+                            <li><a href="#">Progress</a></li>
+                            <li><a href="#">Settings</a></li>
+                        </ul>
+                    </div>
+                    <div class="dir1-main">
+                        <div class="card">
+                            <h4>Upload your study material</h4>
+                            <p>Drag & drop a file or click to select.</p>
+                            <div style="border: 2px dashed #ced4da; border-radius: 8px; padding: 60px; text-align: center; background-color: #f8f9fa;">
+                                Drop file here
+                            </div>
+                            <br>
+                            <button class="btn btn-primary">Upload & Start</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direction 2: Top Navigation -->
+        <div id="dir2" class="direction">
+            <h2>Direction 2: Top Navigation</h2>
+            <p>A clean, web-centric approach with navigation at the top.</p>
+            <div class="mockup">
+                 <div class="dir2-header">
+                    <h3>AI Buddy</h3>
+                    <div class="dir2-nav">
+                        <a href="#" class="active">New Session</a>
+                        <a href="#">My Sets</a>
+                        <a href="#">Progress</a>
+                    </div>
+                    <div><button class="btn btn-secondary">Account</button></div>
+                </div>
+                <div class="mockup-content" style="text-align: center;">
+                     <div class="card" style="max-width: 600px; margin: auto;">
+                        <h4>Create a New Study Session</h4>
+                        <p>Upload your document to get started.</p>
+                        <div style="border: 2px dashed #ced4da; border-radius: 8px; padding: 60px; text-align: center; background-color: #f8f9fa; margin-top: 20px;">
+                            Drag & Drop or Click to Upload
+                        </div>
+                        <br>
+                        <button class="btn btn-primary">Generate Study Set</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direction 3: Card-Based Dashboard -->
+        <div id="dir3" class="direction">
+            <h2>Direction 3: Card-Based Dashboard</h2>
+            <p>An action-oriented dashboard, great for focusing on key tasks.</p>
+            <div class="mockup">
+                <div class="mockup-header"><h3>Dashboard</h3></div>
+                <div class="mockup-content dir3-grid">
+                    <div class="card dir3-card">
+                        <h4>New from Document</h4>
+                        <p>Create a new study set from a file.</p>
+                        <button class="btn btn-primary">Upload</button>
+                    </div>
+                    <div class="card dir3-card">
+                        <h4>Quick Quiz</h4>
+                        <p>Test yourself on a recent topic.</p>
+                        <button class="btn btn-secondary">Start Quiz</button>
+                    </div>
+                     <div class="card dir3-card">
+                        <h4>Review Flashcards</h4>
+                        <p>Practice with your existing sets.</p>
+                        <button class="btn btn-secondary">Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direction 4: Stepper Wizard -->
+        <div id="dir4" class="direction">
+            <h2>Direction 4: Stepper Wizard</h2>
+            <p>A guided, step-by-step process that is great for new users.</p>
+            <div class="mockup">
+                <div class="mockup-header"><h3>New Study Session</h3></div>
+                <div class="mockup-content">
+                    <div class="dir4-stepper">
+                        <div class="dir4-step active"><div class="circle">1</div>Upload</div>
+                        <div class="dir4-step"><div class="circle">2</div>Process</div>
+                        <div class="dir4-step"><div class="circle">3</div>Study</div>
+                        <div class="dir4-step"><div class="circle">4</div>Results</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h4>Step 1: Upload Document</h4>
+                        <p>Select the file you want to study.</p>
+                         <div style="border: 2px dashed #ced4da; border-radius: 8px; padding: 60px; text-align: center; background-color: #f8f9fa; margin-top: 20px;">
+                            Drag & Drop or Click to Upload
+                        </div>
+                        <br>
+                        <button class="btn btn-primary">Continue to Processing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDirection(dir) {
+            document.querySelectorAll('.direction').forEach(el => el.classList.remove('active'));
+            document.getElementById('dir' + dir).classList.add('active');
+            document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
+            document.querySelector('.nav button:nth-child(' + dir + ')').classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

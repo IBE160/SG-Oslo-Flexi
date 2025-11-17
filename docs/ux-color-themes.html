@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Buddy - Color Themes</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .theme {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .theme-header {
+            padding: 20px;
+        }
+        .theme-header h2 {
+            margin: 0;
+        }
+        .theme-header p {
+            margin: 5px 0 0;
+            color: #6c757d;
+        }
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+        }
+        .color {
+            height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 5px;
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .components {
+            padding: 20px;
+            background-color: #f1f3f5;
+        }
+        .button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        /* Focus Theme */
+        .color.focus-primary { background-color: #0d6efd; }
+        .color.focus-secondary { background-color: #6c757d; }
+        .color.focus-success { background-color: #198754; }
+        .color.focus-warning { background-color: #ffc107; }
+        .color.focus-error { background-color: #dc3545; }
+        .button.focus-primary { background-color: #0d6efd; color: white; }
+        .button.focus-secondary { background-color: #6c757d; color: white; }
+        .input.focus-input:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); outline: none;}
+        .alert.focus-success { background-color: #d1e7dd; color: #0f5132; }
+
+        /* Creative Theme */
+        .color.creative-primary { background-color: #6f42c1; }
+        .color.creative-secondary { background-color: #d63384; }
+        .color.creative-success { background-color: #20c997; }
+        .color.creative-warning { background-color: #fd7e14; }
+        .color.creative-error { background-color: #e83e8c; }
+        .button.creative-primary { background-color: #6f42c1; color: white; }
+        .button.creative-secondary { background-color: #d63384; color: white; }
+        .input.creative-input:focus { border-color: #6f42c1; box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25); outline: none;}
+        .alert.creative-success { background-color: #E2F8F1; color: #0B6046; }
+
+        /* Productive Theme */
+        .color.productive-primary { background-color: #198754; }
+        .color.productive-secondary { background-color: #212529; }
+        .color.productive-success { background-color: #198754; }
+        .color.productive-warning { background-color: #ffc107; }
+        .color.productive-error { background-color: #dc3545; }
+        .button.productive-primary { background-color: #198754; color: white; }
+        .button.productive-secondary { background-color: #212529; color: white; }
+        .input.productive-input:focus { border-color: #198754; box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); outline: none;}
+        .alert.productive-success { background-color: #d1e7dd; color: #0f5132; }
+
+
+        /* Balanced Theme */
+        .color.balanced-primary { background-color: #0077b6; }
+        .color.balanced-secondary { background-color: #495057; }
+        .color.balanced-success { background-color: #52b788; }
+        .color.balanced-warning { background-color: #ffb703; }
+        .color.balanced-error { background-color: #d00000; }
+        .button.balanced-primary { background-color: #0077b6; color: white; }
+        .button.balanced-secondary { background-color: #495057; color: white; }
+        .input.balanced-input:focus { border-color: #0077b6; box-shadow: 0 0 0 0.25rem rgba(0, 119, 182, 0.25); outline: none;}
+        .alert.balanced-success { background-color: #d8f3dc; color: #2d6a4f; }
+    </style>
+</head>
+<body>
+
+    <h1>AI Buddy - Color Theme Exploration</h1>
+
+    <div class="container">
+        <!-- Theme 1: Focus -->
+        <div class="theme">
+            <div class="theme-header">
+                <h2>1. Focus</h2>
+                <p>Calm, trustworthy, and professional. Great for productivity.</p>
+            </div>
+            <div class="palette">
+                <div class="color focus-primary">Primary</div>
+                <div class="color focus-secondary">Secondary</div>
+                <div class="color focus-success">Success</div>
+                <div class="color focus-warning">Warning</div>
+                <div class="color focus-error">Error</div>
+            </div>
+            <div class="components">
+                <button class="button focus-primary">Primary Action</button>
+                <button class="button focus-secondary">Secondary</button>
+                <br>
+                <input class="input focus-input" placeholder="Text input field">
+                <div class="alert focus-success">
+                    <strong>Success!</strong> Your study set has been created.
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme 2: Creative -->
+        <div class="theme">
+            <div class="theme-header">
+                <h2>2. Creative</h2>
+                <p>Vibrant, energetic, and inspiring. Encourages creativity.</p>
+            </div>
+            <div class="palette">
+                <div class="color creative-primary">Primary</div>
+                <div class="color creative-secondary">Secondary</div>
+                <div class="color creative-success">Success</div>
+                <div class="color creative-warning">Warning</div>
+                <div class="color creative-error">Error</div>
+            </div>
+            <div class="components">
+                <button class="button creative-primary">Primary Action</button>
+                <button class="button creative-secondary">Secondary</button>
+                <br>
+                <input class="input creative-input" placeholder="Text input field">
+                <div class="alert creative-success">
+                    <strong>Success!</strong> Your study set has been created.
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme 3: Productive -->
+        <div class="theme">
+            <div class="theme-header">
+                <h2>3. Productive</h2>
+                <p>Clean, simple, and efficient. No distractions.</p>
+            </div>
+            <div class="palette">
+                <div class="color productive-primary">Primary</div>
+                <div class="color productive-secondary">Secondary</div>
+                <div class="color productive-success">Success</div>
+                <div class="color productive-warning">Warning</div>
+                <div class="color productive-error">Error</div>
+            </div>
+            <div class="components">
+                <button class="button productive-primary">Primary Action</button>
+                <button class="button productive-secondary">Secondary</button>
+                <br>
+                <input class="input productive-input" placeholder="Text input field">
+                <div class="alert productive-success">
+                    <strong>Success!</strong> Your study set has been created.
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme 4: Balanced -->
+        <div class="theme">
+            <div class="theme-header">
+                <h2>4. Balanced</h2>
+                <p>A mix of professional and friendly. Versatile and modern.</p>
+            </div>
+            <div class="palette">
+                <div class="color balanced-primary">Primary</div>
+                <div class="color balanced-secondary">Secondary</div>
+                <div class="color balanced-success">Success</div>
+                <div class="color balanced-warning">Warning</div>
+                <div class="color balanced-error">Error</div>
+            </div>
+            <div class="components">
+                <button class="button balanced-primary">Primary Action</button>
+                <button class="button balanced-secondary">Secondary</button>
+                <br>
+                <input class="input balanced-input" placeholder="Text input field">
+                <div class="alert balanced-success">
+                    <strong>Success!</strong> Your study set has been created.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
