@@ -6,9 +6,9 @@ Students often spend large amounts of time reviewing lecture notes, slides, and 
 With recent advances in Artificial Intelligence and Large Language Models, it is now possible to combine multiple AI “agents” that analyze content, create exercises, and guide learning. This project explores how AI can support students by generating personalized learning materials and feedback from their own study resources.
 
 ## Purpose
-The goal of this project is to design and implement a simple but functional web-based learning assistant that demonstrates how multiple AI agents can collaborate to help students study more effectively.  
-The application, called **AI Buddy**, will allow users to upload lecture notes or short recordings and automatically receive summaries, flashcards, and quiz questions.  
-The main learning objective for the project team is to apply the **BMAD method** to describe, model, analyze, and design this system using the AI tools introduced in IBE160.
+The primary goal of this project is to design and implement **AI Buddy**, a functional web-based learning assistant that helps students study more effectively by using a multi-agent AI system. The application will allow users to upload their study materials and automatically receive summaries, flashcards, and quiz questions.
+
+As part of the IBE160 course, this project will be developed by applying the **BMAD (Describe, Model, Analyze, Design) method**. This methodology will serve as the core framework for the project's development process, from initial analysis to final design.
 
 ## Target Users
 - University and college students preparing for exams  
