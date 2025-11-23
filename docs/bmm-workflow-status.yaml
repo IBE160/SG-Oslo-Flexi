@@ -33,6 +33,7 @@ workflow_status:
   brainstorm-project: docs/bmm-brainstorming-session-2025-11-14-user-onboarding-engagement.md # agent: analyst
   research: docs/research-technical-llm-2025-11-07.md # agent: analyst
   product-brief: docs/project-brief.md # agent: analyst
+  proposal: proposal.md # agent: analyst
 
   # Phase 1: Planning
   prd: docs/PRD.md # agent: pm
