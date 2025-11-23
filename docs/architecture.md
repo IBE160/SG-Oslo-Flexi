@@ -13,6 +13,8 @@ This document outlines the architecture for the AI Buddy MVP, a web-based learni
 
 ## 3. Project Initialization
 
+*(This section also implicitly defines decisions fulfilled by our chosen starter templates, such as the testing framework and initial file structure.)*
+
 The project will be set up as a monorepo with two primary packages: `frontend` and `backend`.
 
 ### Frontend Setup (Next.js)
@@ -49,15 +51,15 @@ touch app/__init__.py app/main.py
 
 ## 4. Architecture Decision Records (ADRs)
 
-| Category | Decision |
-| :--- | :--- |
-| **Data Persistence** | **PostgreSQL**, hosted on Railway. |
-| **Authentication** | **NextAuth.js** using a **JWT-based** strategy. |
-| **API Pattern** | **REST API** (via FastAPI) for all frontend-backend communication. |
-| **File Storage** | **Local file storage** for the MVP; **Cloudflare R2** for production. |
-| **Deployment Target** | **Vercel** for the Next.js frontend; **Railway** for the FastAPI backend and PostgreSQL database. |
-| **Background Jobs** | **RQ (Redis Queue)** to handle long-running AI tasks asynchronously. Redis will be hosted on Railway. |
-| **Email** | **Resend** for transactional emails, sent via the RQ background worker queue. |
+| Category | Decision | Version |
+| :--- | :--- | :--- |
+| **Data Persistence** | **PostgreSQL**, hosted on Railway. | 18.1 |
+| **Authentication** | **NextAuth.js** using a **JWT-based** strategy. | 4.24.13 |
+| **API Pattern** | **REST API** (via FastAPI on Python) | FastAPI: 0.121.3, Python: 3.10.19 |
+| **File Storage** | **Local file storage** for the MVP; **Cloudflare R2** for production. | N/A |
+| **Deployment Target** | **Vercel** for the Next.js frontend; **Railway** for the backend. | Next.js: 16 |
+| **Background Jobs** | **RQ (Redis Queue)** on Redis. | RQ: 2.6.0, Redis: 8.4 |
+| **Email** | **Resend** for transactional emails, sent via the RQ background worker queue. | 2.19.0 |
 
 ## 5. Cost & Free Tiers (Hobby/Starter Plans)
 
@@ -110,6 +112,61 @@ A comprehensive style guide will be enforced by automated tooling to ensure cons
 *   **Logging:** All application logs will be structured JSON to enable fast searching and analysis.
 *   **Date/Time:** All timestamps on the backend/database will be in **UTC**. Timestamps in the API will be **ISO 8601** strings. The frontend is responsible for converting to local time.
 *   **Testing:** We will use the "Testing Pyramid" strategy: many **Unit Tests** (Pytest, Jest), some **Integration Tests**, and a few **End-to-End Tests**.
+
+## 9. Novel Patterns
+
+This section details custom architectural patterns designed specifically for the AI Buddy platform to ensure scalability and maintainability.
+
+### Stateful Orchestrator
+
+**Purpose:** The Stateful Orchestrator is a central backend service that manages the lifecycle of a user's interaction. It maintains the conversation state and routes requests to the appropriate specialist AI agent (e.g., Reader, Coach) based on the current context. This decouples the frontend from the individual AI agents and allows new agents to be added with minimal friction.
+
+**Component Interactions:**
+
+1.  **Frontend -> Orchestrator:** The frontend makes all its requests to a single endpoint on the Orchestrator (e.g., `POST /api/v1/orchestrator/`). The request body contains the `session_id` and the user's `prompt`.
+2.  **Orchestrator -> State Store (Redis):** The Orchestrator retrieves the current conversation `context` from Redis using the `session_id`.
+3.  **Orchestrator -> Specialist Agent:** The Orchestrator analyzes the `prompt` and the `context` to determine which specialist agent to call. It then calls the specialist agent's internal API (e.g., `POST /agents/reader/process`), passing the relevant context.
+4.  **Specialist Agent -> Orchestrator:** The specialist agent performs its task and returns the result, including any updates to the context.
+5.  **Orchestrator -> State Store (Redis):** The Orchestrator updates the conversation `context` in Redis with the new information.
+6.  **Orchestrator -> Frontend:** The Orchestrator returns the final result to the frontend.
+
+**Data Flow & State Management:**
+
+The core of the orchestrator is the `ConversationContext` object, stored in Redis as a JSON blob against a `session_id` key.
+
+*   **Example `ConversationContext` Object:**
+    ```json
+    {
+      "session_id": "user123_abc",
+      "history": [
+        { "role": "user", "content": "Analyze this document for me." },
+        { "role": "assistant", "content": "Okay, I have read the document. What would you like to know?" }
+      ],
+      "current_document": {
+        "id": "doc_xyz",
+        "raw_text": "The quick brown fox...",
+        "summary": "A sentence about a fox."
+      },
+      "last_agent_used": "Reader"
+    }
+    ```
+
+*   **Sequence:**
+    1.  User sends a prompt.
+    2.  Orchestrator fetches the `ConversationContext`.
+    3.  A simple routing rule is applied: If the prompt contains "read" or "analyze document", route to `ReaderAgent`. If it contains "quiz me" or "ask me questions", route to `CoachAgent`.
+    4.  The chosen agent receives the `ConversationContext`.
+    5.  The agent returns a `result` and a `new_context_state` object.
+    6.  The Orchestrator merges the `new_context_state` into the `ConversationContext` in Redis and sends the `result` to the user.
+
+**Implementation Guide for New Agents:**
+
+To add a new specialist agent (e.g., a `SummarizerAgent`):
+
+1.  Create a new service that exposes a single endpoint (e.g., `/agents/summarizer/process`).
+2.  The endpoint must accept a `ConversationContext` object.
+3.  The agent's logic reads from the context, performs its function, and returns a JSON object containing `result` and `new_context_state`.
+4.  Register the agent and its trigger keywords (e.g., "summarize") in the Orchestrator's routing table.
 
 ---
 _Generated by BMAD Decision Architecture Workflow_
