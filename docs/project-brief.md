@@ -8,7 +8,7 @@ AI Buddy is a web-based learning assistant that helps students and self-learners
 
 The vision for AI Buddy is to create an all-in-one learning loop that takes a student's own materials and transforms them into a personalized study experience. This includes:
 
-*   **Document-first approach:** The system will be built around the student's own documents (PDFs, notes, etc.), using a Retrieval-Augmented Generation (RAG) approach to ensure all generated content is grounded in the source material.
+*   **Document-first approach:** The system will be built around the student's own documents (PDFs, notes, etc.), using a Retrieval-Augmented Generation (RAG) approach to ensure all generated content is grounded in the source material. For the IBE160 MVP, this is approximated with direct prompting over extracted document text; a full vector-database-based RAG pipeline is a future evolution and not part of the current scope.
 *   **Multi-agent workflow:** A series of specialized AI agents (e.g., "Reader", "Coach") will work together to analyze content, generate study materials, and provide personalized feedback.
 *   **Adaptive learning:** The system will adapt to the user's learning style and progress, adjusting the difficulty of questions and providing targeted feedback.
 *   **Motivation by design:** Gamification elements like streaks, badges, and progress tracking will be integrated to keep users engaged and motivated.
@@ -115,7 +115,7 @@ AI Buddy will differentiate itself from existing solutions through:
 
 ## Out of Scope (for MVP)
 
-*   **RAG / Vector Database:** The initial version will not use a vector database for retrieval-augmented generation.
+*   **RAG / Vector Database:** The MVP will not include a vector database or full RAG pipeline, only “document-first prompting” on extracted text.
 *   **Multi-document projects:** The MVP will only support single-document analysis.
 *   **Asynchronous pipelines:** All processing will be synchronous.
 *   **Advanced Gamification:** The MVP will have basic progress tracking, but no badges, leaderboards, or complex rewards.
@@ -149,6 +149,6 @@ AI Buddy's opportunity is to provide a unified, document-first platform that com
 
 ## Risks and Assumptions
 
-*   **LLM Hallucination:** The risk of the AI generating incorrect or misleading information. This will be mitigated by grounding all generated content in the source documents (RAG) and implementing a self-check mechanism in the prompts.
+*   **LLM Hallucination:** The risk of the AI generating incorrect or misleading information. This will be mitigated by grounding all generated content in the source document (and later via RAG when implemented) and implementing a self-check mechanism in the prompts.
 *   **OCR Accuracy:** The accuracy of the OCR process will be critical for the quality of the generated content. This will be addressed by using a high-quality OCR service (Google Cloud Vision) and implementing a quality gate to reject low-quality scans.
 *   **User Adoption:** The success of the project depends on users being willing to adopt a new study tool. This will be addressed by focusing on a smooth onboarding experience and demonstrating clear value to the user.
