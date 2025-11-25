@@ -38,6 +38,12 @@
     3.  **Feedback:** Upon clicking "Continue", the stepper moves to the "Process" step, with a loading indicator and friendly messages. When processing is complete, the stepper automatically moves to the "Study" step.
     4.  **Success:** The "Study" step presents the complete study set. The "Summary" is displayed by default, with clear tabs to switch to "Flashcards" and "Quiz". After completing the quiz, the stepper moves to the "Results" step.
 
+### 4.1. Layout decision for MVP
+
+For the IBE160 MVP, the primary interaction pattern will be the **Stepper Wizard** layout, guiding the user through the "Upload → Process → Study → Results" flow as described above. This focused, linear journey aligns with our core experience principles of speed and guidance for a first-time user.
+
+The alternative layouts explored in `ux-design-directions.html`, such as the sidebar, top navigation, and card-based dashboard, are considered valuable explorations for future iterations or for a "returning user" experience, but they are not part of the initial MVP implementation.
+
 ## 5. Component Library
 
 *   **From Shadcn UI:** Button, Card, Input, Alert, Tabs, Progress.
