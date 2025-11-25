@@ -1,5 +1,10 @@
 # AI Buddy - Epics
 
+> **Note on IBE160 MVP Scope:** The epics below describe the full vision for AI Buddy. For the IBE160 course project, the MVP is strictly focused on:
+> *   A single **“Student” persona** (no teacher dashboards or multi-tenant management).
+> *   **Document upload with OCR only** (no audio-to-text functionality).
+> *   **Document-first prompting** on extracted text (no vector database or full RAG pipeline).
+
 ## Epic 1: Foundation & Core Setup
 
 **Goal:** Establish the foundational infrastructure for the AI Buddy project, including project setup, core dependencies, and a basic CI/CD pipeline. This epic will not deliver user-facing features but is essential for all future development.
