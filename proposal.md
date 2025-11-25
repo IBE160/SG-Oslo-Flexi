@@ -13,11 +13,11 @@ As part of the IBE160 course, this project will be developed by applying the **B
 ## Target Users
 - University and college students preparing for exams  
 - Self-learners using digital study materials  
-- Teachers who wish to generate review material automatically  
+- Teachers who wish to generate review material automatically (future extension, out of scope for the IBE160 MVP).  
 
 ## Core Functionality
 - Secure login and user sessions  
-- Upload of simple study materials (text, scanned notes, or short audio clips)  
+- Upload of simple study materials (text documents and scanned notes)  
 - Automatic generation of summaries, flashcards, and quiz questions  
 - Overview of study progress and quiz results  
 - Web interface suitable for both desktop and mobile  
@@ -28,7 +28,6 @@ As part of the IBE160 course, this project will be developed by applying the **B
 - **File and media upload** for content analysis:  
   - Text documents (PDF, Word, or plain text)  
   - **Scanned or handwritten notes** (processed via OCR or Gemini Vision)  
-  - **Short voice recordings** (converted to text with Whisper or Gemini Audio)  
 - **AI-generated study output:**  
   - Short summaries  
   - Flashcards (question–answer pairs)  
@@ -39,6 +38,7 @@ As part of the IBE160 course, this project will be developed by applying the **B
   - *Coach Agent* → generates questions and feedback  
 
 ### Nice to Have (Optional Extensions)
+- **Short voice recordings** – upload audio for transcription before generating a learning pack (future, not part of IBE160 MVP).
 - **Adaptive “Learn Your Way” mode** – adjusts question difficulty and feedback  
 - **Planner Agent** – proposes a short study plan before exams  
 - **Voice interaction** – “Explain this section in simpler terms”  
@@ -54,8 +54,10 @@ As part of the IBE160 course, this project will be developed by applying the **B
 1. As a student, I can upload my notes or handwritten images and get an AI summary.  
 2. As a learner, I can generate flashcards and quizzes to test myself.  
 3. As a user, I can see my quiz results and track progress over time.  
-4. As a teacher, I can upload course notes to generate simple review questions.  
-5. As a user, I can communicate with my AI Buddy in text to clarify answers.  
+4. As a user, I can communicate with my AI Buddy in text to clarify answers.  
+
+### Future / Vision User Stories (not in MVP)
+5. As a teacher, I can upload course notes to generate simple review questions.  
 
 ## User Flows
 
@@ -80,7 +82,8 @@ As part of the IBE160 course, this project will be developed by applying the **B
 3. User Review (optional): inline fixes; "Accept and Continue".
 4. Generate Learning Pack: Summary, Flashcards, Quiz; stored like any session.
 
-### Flow 4 - Short Audio -> Transcript -> Learning Pack
+### Future Flow 4 – Short Audio -> Transcript -> Learning Pack (out of scope for IBE160 MVP)
+This flow outlines a future capability for handling audio content and is not required for the course MVP.
 1. New Session -> Audio (record in-app or upload .m4a/.mp3 <= 5 min); add title and subject.
 2. Transcription: timestamped text preview.
 3. Cleanup: filler removed; bullets created.
@@ -92,7 +95,8 @@ As part of the IBE160 course, this project will be developed by applying the **B
 3. Take Quiz: timed or untimed; per-item explanations; final tips.
 4. Progress Update: attempt appended; trend graph updated.
 
-### Flow 6 - Teacher (Optional Role): Class Pack
+### Future Flow 6 – Teacher (Optional Role): Class Pack (out of scope for IBE160 MVP)
+This flow describes a feature for a teacher persona, which is a future/vision idea and not part of the core MVP.
 1. Upload Course Notes: bulk PDFs per module.
 2. Generate Class Pack: summary, flashcards, baseline quiz.
 3. Distribute and Monitor: students see "Instructor Pack"; teacher sees aggregated stats.
