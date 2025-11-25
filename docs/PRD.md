@@ -49,7 +49,7 @@ These features are planned for after the MVP, to enhance the product's competiti
 *   **Planner Agent:** Propose a study plan based on the user's goals and exam schedule.
 *   **Voice Interaction:** Allow users to ask questions and receive explanations via voice.
 *   **Advanced Gamification:** Full implementation of streaks, badges, leaderboards, and other motivational features.
-*   **Deeper RAG Integration:** Use a vector database to enable more sophisticated Q&A and cross-document analysis.
+*   **Deeper RAG Integration:** Use a vector database to enable more sophisticated Q&A and cross-document analysis. The IBE160 MVP will not include a vector database; this deeper RAG integration is a future enhancement.
 
 ### 3.3. Vision Features
 
@@ -64,7 +64,7 @@ These represent the long-term aspirations for AI Buddy, pushing the boundaries o
 
 ### 4.1. Innovation Patterns
 
-The core innovation of AI Buddy lies in its **multi-agent orchestration** combined with a **document-first Retrieval-Augmented Generation (RAG)** approach. This allows for:
+The core innovation of AI Buddy lies in its **multi-agent orchestration** combined with a **document-first prompting approach inspired by Retrieval-Augmented Generation (RAG)**. While the MVP uses direct prompting on extracted text without a vector database, the architectural vision is to evolve this into a full RAG stack as part of the growth roadmap. This allows for:
 
 *   **Personalized Learning from Own Materials:** Unlike generic AI chatbots, AI Buddy directly leverages the user's specific study documents to generate highly relevant and accurate learning content.
 *   **Structured Learning Loop:** The multi-agent system (Reader, Coach) creates a structured and adaptive learning path, moving beyond static summaries to interactive quizzes and personalized feedback.
@@ -77,7 +77,7 @@ The validation of these innovations will involve:
 *   **Pilot Programs:** Conducting pilot programs with university students to gather feedback on the effectiveness and usability of the personalized learning experience.
 *   **A/B Testing:** Comparing engagement and learning outcomes between users with and without gamified features.
 *   **Qualitative Feedback:** User interviews and surveys to understand the perceived value of the multi-agent system and document-first RAG.
-*   **Technical Metrics:** Tracking RAG hit rates, LLM hallucination rates, and OCR accuracy to ensure the technical underpinnings are robust.
+*   **Technical Metrics:** Tracking LLM hallucination rates, and OCR accuracy to ensure the technical underpinnings are robust. RAG hit rates will become a key metric in future iterations once a vector-DB-based RAG pipeline is implemented.
 
 ## 5. Project-Specific Deep Dive
 
@@ -91,8 +91,10 @@ The validation of these innovations will involve:
 
 ### 5.2. SaaS B2B Considerations
 
-*   **Tenant Model:** The platform will support a multi-tenant architecture, allowing different educational institutions or groups to manage their users and data securely and independently.
-*   **Permission Matrix:** A robust role-based access control (RBAC) system will be implemented to define granular permissions for different user roles (e.g., Student, Teacher, Administrator). This will ensure data privacy and proper management within each tenant.
+These considerations describe how AI Buddy could evolve into a SaaS/B2B product beyond the IBE160 MVP.
+
+*   **Tenant Model:** For a future B2B offering, the platform would need to support a multi-tenant architecture, allowing different educational institutions or groups to manage their users and data securely and independently. This is not part of the IBE160 MVP.
+*   **Permission Matrix:** A future version would require a robust role-based access control (RBAC) system to define granular permissions for different user roles (e.g., Student, Teacher, Administrator). This is not implemented in the MVP.
 
 ## 6. UX Principles
 
@@ -117,7 +119,7 @@ The validation of these innovations will involve:
 *   **FR1.1:** The system SHALL allow users to register for a new account using email and password.
 *   **FR1.2:** The system SHALL allow users to log in and log out securely.
 *   **FR1.3:** The system SHALL support password reset functionality.
-*   **FR1.4:** The system SHALL allow administrators to manage user roles and permissions (for SaaS B2B tenants).
+*   **FR1.4 (Future):** The system SHOULD be designed to allow administrators to manage user roles and permissions (for SaaS B2B tenants) in later phases. For the IBE160 MVP we assume a single ‘Student’ role (plus a simple admin account for configuration if needed).
 
 ### 7.2. Document Management
 
