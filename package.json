@@ -1,0 +1,19 @@
+{
+  "name": "ibe160-ai-buddy",
+  "version": "1.0.0",
+  "description": "AI Buddy - Student Project",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.0",
+    "dotenv": "^16.3.0",
+    "@faker-js/faker": "^8.3.0"
+  }
+}
