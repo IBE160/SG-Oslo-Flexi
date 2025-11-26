@@ -36,7 +36,7 @@ This project plan is adapted from the IBE160 course example to track the progres
 - [x] /run-agent-task pm *prd "Create and maintain PRD.md for AI Buddy."
 - [x] /run-agent-task pm *validate-prd "Create validation-report entries for the PRD."
 - [x] /run-agent-task ux-designer *create-ux-design "Create ux-design-specification.md and related UX docs."
-- [ ] /run-agent-task ux-designer *validate-ux-design "Validate UX against PRD and user flows (validation-report)."
+- [x] /run-agent-task ux-designer *validate-ux-design "Validate UX against PRD and user flows (validation-report)."
 - [ ] /run-agent-task tea *framework "Define the testing framework and strategy"
 - [ ] /run-agent-task tea *ci "Set up the Continuous Integration pipeline"
 - [ ] /run-agent-task tea *test-design "Design the overall test architecture for AI Buddy"
