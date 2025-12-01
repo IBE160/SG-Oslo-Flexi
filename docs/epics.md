@@ -39,6 +39,33 @@
     *   Then a GitHub Actions workflow is triggered.
     *   And the workflow runs linting and unit tests for both the frontend and backend.
 
+**Story 1.4: Database Setup (PostgreSQL)**
+
+*   **As a developer,** I want to set up PostgreSQL as the primary database, so that the application has a robust and persistent storage layer.
+*   **Acceptance Criteria:**
+    *   Given a local or cloud PostgreSQL instance is available,
+    *   When I configure the backend application,
+    *   Then I can successfully connect to the database.
+    *   And I can run basic migrations to create initial tables (e.g., users table).
+
+**Story 1.5: Background Job Queue Setup (Redis/RQ)**
+
+*   **As a developer,** I want to set up Redis and RQ (Redis Queue), so that time-consuming tasks like OCR and AI generation can be processed in the background without blocking the user interface.
+*   **Acceptance Criteria:**
+    *   Given a Redis instance is running,
+    *   When I configure the backend to use RQ,
+    *   Then I can enqueue a test job from an API endpoint.
+    *   And a separate worker process successfully executes the job and logs the result.
+
+**Story 1.6: Stateful Orchestrator Skeleton**
+
+*   **As a developer,** I want to implement a basic 'Stateful Orchestrator' skeleton in the backend, so that we can manage the multi-step process of document analysis and content generation.
+*   **Acceptance Criteria:**
+    *   Given the backend application is running,
+    *   When a document upload event occurs,
+    *   Then the orchestrator creates a workflow instance with a tracked state (e.g., 'uploaded', 'processing', 'completed').
+    *   And the orchestrator can transition between these states based on job completion events.
+
 ## Epic 2: User Authentication & Onboarding
 
 **Goal:** Implement a secure user authentication system and a smooth onboarding experience to guide new users to their "Aha!" moment.
@@ -69,6 +96,15 @@
     *   When I log in for the first time,
     *   Then I am shown a brief, interactive tutorial that guides me through uploading a document and generating a quiz.
 
+**Story 2.4: Authentication Integration (NextAuth.js)**
+
+*   **As a developer,** I want to integrate NextAuth.js into the frontend application, so that we have a secure and standard way to handle user sessions and protection.
+*   **Acceptance Criteria:**
+    *   Given the frontend application is running,
+    *   When a user logs in,
+    *   Then a secure session (JWT-based) is created and stored.
+    *   And protected routes redirect unauthenticated users to the login page.
+
 ## Epic 3: Document Processing & Analysis
 
 **Goal:** Build the core document processing pipeline, including file upload, OCR, and the "Reader" agent for content analysis.
@@ -98,6 +134,23 @@
     *   Given a document has been uploaded and processed,
     *   When the analysis is complete,
     *   Then a summary and key concepts are extracted and stored.
+
+**Story 3.4: Secure Temporary Storage**
+
+*   **As a system,** I want to securely store uploaded documents temporarily, so that they are available for processing but not exposed or retained indefinitely.
+*   **Acceptance Criteria:**
+    *   Given a user uploads a file,
+    *   When the file is saved to the storage volume,
+    *   Then it is not accessible via a public URL.
+    *   And it is stored with a unique identifier associated with the user session or ID.
+
+**Story 3.5: Document & Content Deletion**
+
+*   **As a user (or system administrator),** I want uploaded documents and generated content to be deleted upon request or after a set time, so that my data privacy is respected.
+*   **Acceptance Criteria:**
+    *   Given a document has been processed and stored,
+    *   When the user clicks "Delete" OR a defined TTL (Time-To-Live) expires,
+    *   Then the original file and all associated database records (summary, quiz) are permanently removed from the system.
 
 ## Epic 4: AI-Powered Content Generation
 
@@ -180,3 +233,17 @@
     *   Given I have taken at least one quiz,
     *   When I view my dashboard,
     *   Then I can see a summary of my average quiz score and the number of quizzes I have completed.
+
+## Epic 7: Quality Assurance & UX Excellence
+
+**Goal:** Ensure the application is robust, user-friendly, and accessible to all users.
+
+### Stories:
+
+**Story 7.1: Accessibility Compliance (WCAG 2.1 AA)**
+
+*   **As a user with disabilities,** I want the application to be accessible and navigable using assistive technologies, so that I can use the tool effectively.
+*   **Acceptance Criteria:**
+    *   Given the application is deployed,
+    *   When verified against WCAG 2.1 Level AA guidelines (e.g., using tools like axe-core or Lighthouse),
+    *   Then there are no critical or serious accessibility violations (proper contrast, keyboard navigation, focus states, and screen reader support).

@@ -158,11 +158,12 @@ The alternative layouts explored in `ux-design-directions.html`, such as the sid
         *   **≤ 640px (Mobile):** Single-column layout, stacked content.
         *   **641–1024px (Tablet):** Two-column layout where possible, collapsible navigation.
         *   **> 1024px (Desktop):** Multi-column layout with persistent sidebar navigation.
-*   **Accessibility:** WCAG 2.1 Level A.
-    *   **Contrast:** Text and interactive elements use a minimum contrast ratio of 4.5:1 against their background.
-    *   **Keyboard Navigation:** All interactive elements (buttons, links, tabs, flashcards, quiz options) can be operated with keyboard only (Tab, Shift+Tab, Enter, Space, Arrow keys where appropriate).
-    *   **Focus Indicators:** A visible focus ring is always shown on the currently focused element, including within modals and the Stepper Wizard.
+*   **Accessibility:** WCAG 2.1 Level AA.
+    *   **Contrast:** Ensure sufficient contrast between text and its background (at least 4.5:1 for normal text, 3:1 for large text and UI components).
+    *   **Keyboard Navigation:** All interactive elements (buttons, links, tabs, flashcards, quiz options) must be navigable and operable via keyboard. Focus order must be logical.
+    *   **Focus Indicators:** A clearly visible focus indicator must be present for all focused elements.
+    *   **Error Identification:** Errors (like failed uploads) must be identified in text and programmatically associated with the field in error.
     *   **ARIA & Semantics:**
         *   Modals use appropriate dialog semantics and trap focus until closed.
-        *   Toasts and alerts use aria-live so feedback is announced to assistive technologies.
+        *   Toasts and alerts use `aria-live` so feedback is announced to assistive technologies.
         *   Quiz questions and flashcards use semantic headings/regions so screen readers can understand the current step or card.
