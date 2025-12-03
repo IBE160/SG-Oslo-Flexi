@@ -1,0 +1,19 @@
+[project]
+name = "ai-buddy-backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Davor Necemer",email = "davor.necemer@himolde.no"}
+]
+readme = "README.md"
+requires-python = "^3.10"
+dependencies = [
+    "fastapi (>=0.123.5,<0.124.0)",
+    "uvicorn[standard] (>=0.38.0,<0.39.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
