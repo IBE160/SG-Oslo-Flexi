@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: backend/.venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('backend/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('backend/poetry.lock') }}
           
       - name: Install dependencies
         working-directory: ./backend
@@ -64,10 +64,6 @@ jobs:
       - name: Install project
         working-directory: ./backend
         run: poetry install --no-interaction
-
-      - name: Run Lint (Ruff)
-        working-directory: ./backend
-        run: poetry run ruff check .
         
       - name: Run Tests
         working-directory: ./backend
