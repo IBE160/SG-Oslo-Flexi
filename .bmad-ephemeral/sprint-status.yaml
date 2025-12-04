@@ -1,0 +1,51 @@
+generated: onsdag 3. desember 2025
+project: ibe160
+project_key: ibe160
+tracking_system: file-system
+story_location: C:\Users\davor\SG-Oslo-Flexi/docs/stories
+
+development_status:
+  epic-1: backlog
+  1-1-project-initialization: done
+  1-2-dependency-management: done
+  1-3-basic-cicd-pipeline: done
+  1-4-database-setup: backlog
+  1-5-background-job-queue-setup: backlog
+  1-6-stateful-orchestrator-skeleton: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-user-registration: backlog
+  2-2-user-login: backlog
+  2-3-basic-onboarding: backlog
+  2-4-authentication-integration: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-file-upload: backlog
+  3-2-ocr-for-scanned-documents: backlog
+  3-3-reader-agent-analysis: backlog
+  3-4-secure-temporary-storage: backlog
+  3-5-document-content-deletion: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-summary-generation: backlog
+  4-2-flashcard-generation: backlog
+  4-3-quiz-generation: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-flashcard-review: backlog
+  5-2-quiz-interface: backlog
+  5-3-quiz-results: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-quiz-history: backlog
+  6-2-basic-progress-dashboard: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-accessibility-compliance: backlog
+  epic-7-retrospective: optional
