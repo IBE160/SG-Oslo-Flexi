@@ -48,8 +48,15 @@ This project plan is adapted from the IBE160 course example to track the progres
 
 ## Fase 3: Implementation & Delivery
 
-- [ ] /run-agent-task sm *sprint-planning "Plan the upcoming development sprint"
-- [ ] For each epic in `epics.md`:
+- [x] /run-agent-task sm *sprint-planning "Plan the upcoming development sprint"
+- [x] Epic 1: Foundation & Core Setup
+  - [x] Story 1.1: Project Initialization
+  - [x] Story 1.2: Dependency Management
+  - [x] Story 1.3: Basic CI/CD Pipeline
+  - [x] Story 1.4: Database Setup (PostgreSQL)
+  - [x] Story 1.5: Background Job Queue Setup (Redis/RQ)
+  - [x] Story 1.6: Stateful Orchestrator Skeleton
+- [ ] For remaining epics in `epics.md`:
   - [ ] /run-agent-task sm epic-tech-content "Create technical content for the epic"
   - [ ] /run-agent-task sm validate-epic-tech-content "Validate the epic's technical content"
   - [ ] For each story in that epic:

@@ -42,7 +42,7 @@ workflow_status:
 
   # Phase 2: Solutioning
   create-architecture: docs/architecture.md # agent: architect
-  validate-architecture: optional # agent: architect
+  validate-architecture: docs/validation-report-2025-11-23-2.md # agent: architect
   solutioning-gate-check: docs/implementation-readiness-report-2025-12-01.md # agent: architect
 
   # Phase 3: Implementation
