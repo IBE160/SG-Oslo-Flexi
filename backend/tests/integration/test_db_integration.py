@@ -2,6 +2,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+import pytest
+from sqlalchemy import text
+from app.db.session import engine
+
 @pytest.mark.asyncio
 async def test_database_connection():
     """Verify we can connect to the database."""
