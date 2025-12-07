@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-import os
 
 def init_db():
     # Parse credentials from DATABASE_URL or hardcode for this check based on what I wrote to .env
