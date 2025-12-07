@@ -56,17 +56,12 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 1.4: Database Setup (PostgreSQL)
   - [x] Story 1.5: Background Job Queue Setup (Redis/RQ)
   - [x] Story 1.6: Stateful Orchestrator Skeleton
-- [ ] For remaining epics in `epics.md`:
-  - [ ] /run-agent-task sm epic-tech-content "Create technical content for the epic"
-  - [ ] /run-agent-task sm validate-epic-tech-content "Validate the epic's technical content"
-  - [ ] For each story in that epic:
-    - [ ] /run-agent-task sm *create-story "Create the user story"
-    - [ ] /run-agent-task sm *validate-create-story "Validate the user story"
-    - [ ] /run-agent-task sm *story-context "Provide context for the story"
-    - [ ] /run-agent-task sm *validate-story-context "Validate the story context"
-    - [ ] /run-agent-task tea *validate-story-ready "Validate that the story is ready for implementation"
-    - [ ] /run-agent-task dev *implement-story "Implement the story"
-    - [ ] /run-agent-task dev *validate-story "Validate the story implementation"
-    - [ ] /run-agent-task tea *automate "Automate tests for the story"
-    - [ ] /run-agent-task tea *test-review "Review the automated tests"
+
+## Fase 4: Authentication
+
+- [ ] Epic 2: User Authentication & Onboarding
+  - [ ] Story 2.1: User Registration
+  - [ ] Story 2.2: User Login
+  - [ ] Story 2.3: Basic Onboarding
+  - [ ] Story 2.4: Authentication Integration (NextAuth.js)
 - [ ] /run-agent-task sm *retrospective "Run a sprint retrospective after the sprint"
