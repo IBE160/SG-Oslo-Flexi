@@ -72,7 +72,7 @@
 
 ### Stories:
 
-**Story 2.1: User Registration**
+**Story 2.1: User Registration** (Status: Done)
 
 *   **As a new user,** I want to be able to register for an account using my email and a password, so that I can access the application.
 *   **Acceptance Criteria:**

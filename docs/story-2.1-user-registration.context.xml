@@ -1,0 +1,136 @@
+<story-context id="docs/story-2.1-user-registration.context.xml" v="1.1">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.1</storyId>
+    <title>User Registration</title>
+    <status>ready_for_dev</status>
+    <generatedAt>2025-12-07</generatedAt>
+    <generator>BMAD Story Context Workflow (Manual Fix)</generator>
+    <sourceStoryPath>docs/story-2.1-user-registration.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>new user</asA>
+    <iWant>to be able to register for an account using my email and a password</iWant>
+    <soThat>I can access the application</soThat>
+    <tasks>
+      <task type="backend">(AC: #1) Create POST /api/v1/users/register endpoint.</task>
+      <task type="backend">(AC: #1) Implement request body validation for email and password.</task>
+      <task type="backend">(AC: #1) Hash password using bcrypt before storing in the users table.</task>
+      <task type="backend">(AC: #1) Return 201 Created with user ID and email on success.</task>
+      <task type="backend">(AC: #1) Return 400 Bad Request or 409 Conflict on error.</task>
+      <task type="backend">(AC: #1) Testing: Write unit tests for the registration endpoint, covering success and error cases.</task>
+      <task type="frontend">(AC: #2) Create RegistrationForm component.</task>
+      <task type="frontend">(AC: #2) Manage form state for email, password, and submission status.</task>
+      <task type="frontend">(AC: #2) Create API service function to call the registration endpoint.</task>
+      <task type="frontend">(AC: #2) On successful registration, redirect the user to the /login page.</task>
+      <task type="frontend">(AC: #2) Testing: Write unit tests for the RegistrationForm component, mocking the API service.</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion>Given I am on the registration page,</criterion>
+    <criterion>When I enter my email and a valid password,</criterion>
+    <criterion>Then my account is created.</criterion>
+    <criterion>And I am redirected to the login page.</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/tech-spec-epic-2.md">
+        <snippet region="Story 2.1: User Registration">
+          **Objective:** Create a secure endpoint and a user-facing form to allow new users to register for an account.
+          *   **API Endpoint:** `POST /api/v1/users/register`
+          *   **Request Body:** `{"email": "...", "password": "..."}`
+          *   **Success Response (201 Created):** `{"id": "...", "email": "..."}`
+        </snippet>
+      </doc>
+      <doc path="docs/architecture.md">
+        <snippet region="7. Implementation Patterns & Style Guide">
+          *   **Database Naming:** Tables and columns will be snake_case. Tables will be plural (e.g., users).
+          *   **API Naming:** JSON fields will be snake_case. API endpoints will be resource-oriented.
+        </snippet>
+        <snippet region="8. Cross-Cutting Concerns">
+          *   **Error Handling:** The REST API will use a standard error format: `{ "error": { "message": "...", "code": "..." } }`.
+          *   **Success Responses:** All successful API responses will be wrapped in a `data` object: `{ "data": { ... } }`.
+        </snippet>
+      </doc>
+      <doc path="docs/epics.md">
+        <snippet region="Story 2.1: User Registration">
+          *   **As a new user,** I want to be able to register for an account using my email and a password, so that I can access the application.
+          *   **Acceptance Criteria:** Given I am on the registration page... Then my account is created and I am logged in.
+        </snippet>
+      </doc>
+    </docs>
+    <code>
+      <snippet path="backend/app/main.py">
+        app.include_router(health.router)
+        app.include_router(queue.router)
+        app.include_router(orchestrator.router, prefix="/orchestrator", tags=["orchestrator"])
+        # TODO: Add users router here
+      </snippet>
+      <snippet path="backend/app/db/base.py">
+        from sqlalchemy.orm import DeclarativeBase
+        class Base(DeclarativeBase):
+            pass
+        # New User model should inherit from this Base
+      </snippet>
+    </code>
+    <dependencies>
+      <dep context="backend">fastapi</dep>
+      <dep context="backend">sqlalchemy</dep>
+      <dep context="backend">pydantic</dep>
+      <dep context="backend">alembic</dep>
+      <dep context="backend">bcrypt (needs to be added)</dep>
+      <dep context="frontend">next</dep>
+      <dep context="frontend">react</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>The implementation should follow the REST API patterns and database naming conventions outlined in the architecture document.</constraint>
+    <constraint>The backend endpoint will be part of the main FastAPI application.</constraint>
+    <constraint>Passwords must be hashed using bcrypt before storage.</constraint>
+    <constraint>API responses must strictly follow the standard success/error wrappers defined in Architecture.</constraint>
+  </constraints>
+
+  <interfaces>
+    <api method="POST" path="/api/v1/users/register">
+      <request>
+        {
+          "email": "user@example.com",
+          "password": "strongPassword123"
+        }
+      </request>
+      <response status="201">
+        {
+          "data": {
+            "id": "uuid-string",
+            "email": "user@example.com"
+          }
+        }
+      </response>
+      <response status="400">
+        {
+          "error": {
+            "message": "Invalid email format",
+            "code": "INVALID_EMAIL"
+          }
+        }
+      </response>
+    </api>
+  </interfaces>
+
+  <tests>
+    <standards>Use the "Testing Pyramid" strategy: many Unit Tests (Pytest, Jest), some Integration Tests.</standards>
+    <locations>
+      <loc context="backend">backend/tests/</loc>
+      <loc context="frontend">frontend/tests/ (or co-located if configured)</loc>
+    </locations>
+    <ideas>
+      <idea>Test registration with existing email (should fail 409)</idea>
+      <idea>Test registration with weak password (should fail 400)</idea>
+      <idea>Test successful registration checks DB for hashed password</idea>
+    </ideas>
+  </tests>
+</story-context>
