@@ -1,67 +1,118 @@
-import asyncio
-from typing import AsyncGenerator
+import os
+
+# Set test database URL before importing app.core.config
+# We use sqlite+aiosqlite for async support in tests
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+
+
 
 import pytest
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+import pytest_asyncio
+from typing import AsyncGenerator, Generator
 
-from app.core.config import settings
-from app.db.base import Base
-from app.db.session import get_db
+from httpx import ASGITransport, AsyncClient
+from fastapi.testclient import TestClient
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
 from app.main import app
-
-# Use a local SQLite database for ALL tests (local + CI)
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
-
-# Force settings to use the test DB in the test environment
-settings.DATABASE_URL = TEST_DATABASE_URL
-
-# Create async engine and session factory for tests
-engine = create_async_engine(TEST_DATABASE_URL, future=True)
-AsyncSessionLocal = async_sessionmaker(
-    engine, expire_on_commit=False, class_=AsyncSession
-)
+from app.db.session import AsyncSessionLocal, engine
+from app.db import base
+from app.models.user import User  # noqa: F401 - Import User model to register it with Base metadata
 
 
-async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
-    """Dependency override for FastAPI routes: use the test SQLite DB."""
+# ---------------------
+# DATABASE OVERRIDES
+# ---------------------
+
+@pytest.fixture(scope="session", autouse=True)
+def apply_db_override():
+    """
+    Override FastAPI's `get_db` dependency so the app uses the test database.
+    """
+    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+        async with AsyncSessionLocal() as session:
+            yield session
+
+    app.dependency_overrides.clear()
+    from app.db.session import get_db
+    app.dependency_overrides[get_db] = override_get_db
+
+    yield
+    app.dependency_overrides.clear()
+
+
+# ---------------------
+# ASYNC: DB setup (create/drop tables)
+# ---------------------
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def setup_db():
+    """
+    Create all tables before the test session and drop them after.
+    """
+    async with engine.begin() as conn:
+        await conn.run_sync(base.Base.metadata.create_all)
+
+    yield  # test session runs
+
+    async with engine.begin() as conn:
+        await conn.run_sync(base.Base.metadata.drop_all)
+
+
+# ---------------------
+# ASYNC DB fixture (for async tests)
+# ---------------------
+
+@pytest_asyncio.fixture
+async def adb() -> AsyncGenerator[AsyncSession, None]:
+    """
+    Async DB session for async tests.
+    """
     async with AsyncSessionLocal() as session:
         yield session
 
 
-@pytest.fixture(scope="session", autouse=True)
-async def prepare_database() -> AsyncGenerator[None, None]:
-    """
-    Create all tables once before the test session and drop them afterwards.
-    """
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    try:
-        yield
-    finally:
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.drop_all)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def override_db_dependency() -> AsyncGenerator[None, None]:
-    """
-    Make the FastAPI app use override_get_db instead of the normal get_db
-    for the entire test session.
-    """
-    app.dependency_overrides[get_db] = override_get_db
-    try:
-        yield
-    finally:
-        app.dependency_overrides.pop(get_db, None)
-
+# ---------------------
+# SYNC DB fixture (for TestClient)
+# ---------------------
 
 @pytest.fixture
+def db() -> Generator:
+    """
+    Sync DB session for tests using TestClient.
+    Uses same SQLite file as async engine.
+    """
+    sync_engine = create_engine("sqlite:///./test.db")
+    TestingSessionLocal = sessionmaker(bind=sync_engine)
+
+    session = TestingSessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
+
+
+# ---------------------
+# HTTP CLIENTS
+# ---------------------
+
+@pytest_asyncio.fixture
 async def client() -> AsyncGenerator[AsyncClient, None]:
     """
-    Convenience client fixture (not strictly required for your tests, but handy).
+    Async HTTP client (for async API tests: test_users.py)
     """
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+
+
+@pytest.fixture
+def sync_client() -> Generator[TestClient, None]:
+    """
+    Sync TestClient (for auth tests: test_auth_api.py)
+    """
+    with TestClient(app) as client:
+        yield client
