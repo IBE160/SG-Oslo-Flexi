@@ -5,4 +5,6 @@ node_modules/
 .env
 __pycache__/
 backend/tests/__pycache__/
-backend/dev.dbbackend/test.db
+backend/dev.db
+backend/test.db
+test.db
