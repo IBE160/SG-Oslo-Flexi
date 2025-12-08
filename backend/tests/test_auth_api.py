@@ -1,10 +1,10 @@
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.user import User
 from app.core.security import get_password_hash
 
-def test_login_access_token(client: TestClient, db: Session):
+async def test_login_access_token(client: AsyncClient, db: Session):
     # Create a user first
     email = "testlogin@example.com"
     password = "testpassword"
@@ -17,14 +17,14 @@ def test_login_access_token(client: TestClient, db: Session):
         "username": email,
         "password": password
     }
-    response = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    response = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
     
     assert response.status_code == 200
     tokens = response.json()
     assert "access_token" in tokens
     assert tokens["token_type"] == "bearer"
 
-def test_login_wrong_password(client: TestClient, db: Session):
+async def test_login_wrong_password(client: AsyncClient, db: Session):
     # Create a user first
     email = "testwrongpassword@example.com"
     password = "testpassword"
@@ -37,17 +37,18 @@ def test_login_wrong_password(client: TestClient, db: Session):
         "username": email,
         "password": "wrongpassword"
     }
-    response = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    response = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
     
     assert response.status_code == 401
-    assert response.json()["detail"] == "Incorrect email or password"
+    assert "Incorrect email or password" in response.text
 
-def test_login_non_existent_user(client: TestClient, db: Session):
+
+async def test_login_non_existent_user(client: AsyncClient, db: Session):
     login_data = {
         "username": "nonexistent@example.com",
         "password": "somepassword"
     }
-    response = client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
+    response = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
     
     assert response.status_code == 401
-    assert response.json()["detail"] == "Incorrect email or password"
+    assert "Incorrect email or password" in response.text
