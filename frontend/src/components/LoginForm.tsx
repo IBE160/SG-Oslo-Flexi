@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/lib/api';
+import { signIn } from 'next-auth/react';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -15,10 +15,19 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
+      const result = await signIn('credentials', {
+        redirect: false,
+        username: email,
+        password: password,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password");
+      } else if (result?.ok) {
+        router.push('/dashboard');
+      }
+    } catch {
+      setError('Login failed');
     } finally {
       setIsLoading(false);
     }

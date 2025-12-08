@@ -47,10 +47,10 @@ development_status:
 
   epic-2: contexted
   2-1-user-registration: done
-  2-2-user-login: drafted
+  2-2-user-login: done
   2-3-basic-onboarding: backlog
-  2-4-authentication-integration: backlog
-  epic-2-retrospective: optional
+  2-4-authentication-integration: done
+  epic-2-retrospective: completed
 
   epic-3: backlog
   3-1-file-upload: backlog

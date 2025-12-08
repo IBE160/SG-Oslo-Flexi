@@ -8,6 +8,7 @@ export default function RegistrationForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,11 +16,27 @@ export default function RegistrationForm() {
     setError(null);
     try {
       await registerUser(email, password);
-      router.push('/login');
-    } catch (err: any) {
-      setError(err.message);
+      setSuccess(true);
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Registration failed');
+      }
     }
   };
+
+  if (success) {
+    return (
+      <div className="max-w-sm mx-auto p-4 border rounded shadow-md bg-green-50 text-center">
+        <h2 className="text-xl font-bold text-green-700">Registration Successful!</h2>
+        <p className="mt-2 text-green-600">Redirecting to login...</p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm mx-auto p-4 border rounded shadow-md">

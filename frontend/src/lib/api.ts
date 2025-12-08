@@ -1,6 +1,17 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export async function registerUser(email: string, password: string): Promise<any> {
+interface UserResponse {
+  id: string;
+  email: string;
+}
+
+interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  detail?: string;
+}
+
+export async function registerUser(email: string, password: string): Promise<UserResponse> {
   const response = await fetch(`${API_URL}/api/v1/users/register`, {
     method: 'POST',
     headers: {
@@ -18,7 +29,7 @@ export async function registerUser(email: string, password: string): Promise<any
   return data.data;
 }
 
-export async function login(username: string, password: string): Promise<any> {
+export async function login(username: string, password: string): Promise<AuthResponse> {
   const formData = new URLSearchParams();
   formData.append('username', username);
   formData.append('password', password);
