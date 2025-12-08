@@ -1,0 +1,96 @@
+<story-context id="docs/story-2.2-user-login.context.xml" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.2</storyId>
+    <title>User Login</title>
+    <status>ready_for_dev</status>
+    <generatedAt>2025-12-08</generatedAt>
+    <generator>BMAD Story Context Workflow (Manual)</generator>
+    <sourceStoryPath>docs/story-2.2-user-login.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>registered user</asA>
+    <iWant>to be able to log in to my account</iWant>
+    <soThat>I can access my saved progress and materials</soThat>
+    <tasks>
+      <task type="backend">(AC: #1) Update Settings in `config.py` with JWT secrets and expiry.</task>
+      <task type="backend">(AC: #1) Implement `create_access_token` in `security.py` using `python-jose`.</task>
+      <task type="backend">(AC: #1) Create `Token` schema in `schemas/token.py`.</task>
+      <task type="backend">(AC: #1) Create `POST /api/v1/login/access-token` endpoint in `api/auth.py` (or `api/login.py`).</task>
+      <task type="backend">(AC: #1) Implement user authentication logic (verify email/password).</task>
+      <task type="backend">(AC: #1) Register `auth` router in `main.py`.</task>
+      <task type="backend">(AC: #1) Testing: Write unit tests for the login endpoint (success, invalid credentials).</task>
+      <task type="frontend">(AC: #1) Create `LoginForm` component with email and password fields.</task>
+      <task type="frontend">(AC: #1) Create API service function `login` to call the backend endpoint.</task>
+      <task type="frontend">(AC: #1) Handle successful login (store token/redirect) and errors (display message).</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion>Given I am on the login page,</criterion>
+    <criterion>When I enter my correct email and password,</criterion>
+    <criterion>Then I am logged in and redirected to my dashboard.</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/tech-spec-epic-2.md">
+        <snippet region="Story 2.2: User Login">
+          *   **API Endpoint:** `POST /api/v1/auth/token`
+          *   **Request Body (form-encoded):** `username=...&password=...`
+          *   **Success Response (200 OK):** `{"access_token": "...", "token_type": "bearer"}`
+        </snippet>
+      </doc>
+      <doc path="docs/story-2.2-user-login.md">
+         <snippet region="Acceptance Criteria">
+            Given I am on the login page...
+         </snippet>
+      </doc>
+    </docs>
+    <code>
+      <snippet path="backend/app/main.py">
+        app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
+        # TODO: Add auth/login router here
+      </snippet>
+      <snippet path="backend/app/core/security.py">
+        # TODO: Add create_access_token function
+      </snippet>
+      <snippet path="backend/app/core/config.py">
+        # TODO: Add SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+      </snippet>
+    </code>
+    <dependencies>
+      <dep context="backend">python-jose[cryptography]</dep>
+      <dep context="backend">python-multipart (for OAuth2PasswordRequestForm)</dep>
+      <dep context="backend">passlib[bcrypt]</dep>
+      <dep context="frontend">react-hook-form (optional, but good for forms)</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Use OAuth2 password flow (form-encoded body) for the login endpoint.</constraint>
+    <constraint>Return a JWT access token.</constraint>
+    <constraint>Use `python-jose` for JWT encoding.</constraint>
+  </constraints>
+
+  <interfaces>
+    <api method="POST" path="/api/v1/auth/token">
+      <request content-type="application/x-www-form-urlencoded">
+        username=user@example.com
+        password=strongPassword123
+      </request>
+      <response status="200">
+        {
+          "access_token": "eyJ0eX...",
+          "token_type": "bearer"
+        }
+      </response>
+      <response status="401">
+        {
+          "detail": "Incorrect email or password"
+        }
+      </response>
+    </api>
+  </interfaces>
+</story-context>
