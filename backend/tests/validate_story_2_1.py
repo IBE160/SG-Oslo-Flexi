@@ -10,8 +10,7 @@ from app.main import app
 from app.db.session import get_db
 from app.db.base import Base
 # Import all models to ensure they are registered with Base
-from app.models.user import User
-
+from app.models.user import User  # noqa: F401
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 import uuid
 
