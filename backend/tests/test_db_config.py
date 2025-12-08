@@ -16,7 +16,15 @@ def test_alembic_installed():
     spec = importlib.util.find_spec("alembic")
     assert spec is not None
 
+from app.core.config import settings
+
 def test_database_url_configuration():
     """Verify that DATABASE_URL is set in the configuration."""
     assert settings.DATABASE_URL is not None
-    assert "postgresql" in settings.DATABASE_URL
+
+    # Allow both Postgres (CI / production) and SQLite (local dev)
+    assert (
+        settings.DATABASE_URL.startswith("postgresql")
+        or settings.DATABASE_URL.startswith("sqlite+aiosqlite")
+    )
+
