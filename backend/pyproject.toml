@@ -15,7 +15,7 @@ dependencies = [
     "uvicorn[standard] (>=0.38.0,<0.39.0)",
     "python-dotenv (>=1.2.1,<2.0.0)",
     "sqlalchemy (>=2.0.0,<3.0.0)",
-    "asyncpg (>=0.29.0,<0.30.0)",
+    "aiosqlite (>=0.21.0,<0.22.0)",
     "psycopg2-binary (>=2.9.9,<3.0.0)",
     "alembic (>=1.13.0,<2.0.0)",
     "pydantic-settings (>=2.0.0,<3.0.0)",
@@ -24,7 +24,14 @@ dependencies = [
     "passlib (>=1.7.4,<2.0.0)",
     "bcrypt (==3.2.2)",
     "email-validator (>=2.0.0,<3.0.0)",
+    "python-jose[cryptography] (>=3.3.0,<4.0.0)",
+    "python-multipart (>=0.0.9,<1.0.0)",
 ]
+
+[project.optional-dependencies]
+postgres = ["asyncpg (>=0.29.0,<0.30.0)"]
+
+
 
 
 [build-system]
@@ -39,3 +46,6 @@ dev = [
     "ruff (>=0.4.0,<1.0.0)"
 ]
 
+[tool.pytest.ini_options]
+pythonpath = "."
+asyncio_mode = "auto"

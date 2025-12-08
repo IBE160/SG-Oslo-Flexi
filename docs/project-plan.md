@@ -61,7 +61,7 @@ This project plan is adapted from the IBE160 course example to track the progres
 
 - [ ] Epic 2: User Authentication & Onboarding
   - [x] Story 2.1: User Registration
-  - [ ] Story 2.2: User Login
+  - [x] Story 2.2: User Login
   - [ ] Story 2.3: Basic Onboarding
-  - [ ] Story 2.4: Authentication Integration (NextAuth.js)
+  - [x] Story 2.4: Authentication Integration (NextAuth.js)
 - [ ] /run-agent-task sm *retrospective "Run a sprint retrospective after the sprint"

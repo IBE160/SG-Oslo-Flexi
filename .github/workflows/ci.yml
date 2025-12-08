@@ -68,9 +68,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-
-      - name: Lint
+      
+      - name: Lint with ruff
         run: poetry run ruff check .
 
-      - name: Test
+      - name: Test with pytest
         run: poetry run pytest
+        env:
+          DATABASE_URL: sqlite+aiosqlite:///./test.db

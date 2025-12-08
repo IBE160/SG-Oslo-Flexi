@@ -1,0 +1,78 @@
+<story-context id="docs/story-2.4-authentication-integration.context.xml" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>2.4</storyId>
+    <title>Authentication Integration (NextAuth.js)</title>
+    <status>ready_for_dev</status>
+    <generatedAt>2025-12-08</generatedAt>
+    <generator>BMAD Story Context Workflow (Manual)</generator>
+    <sourceStoryPath>docs/story-2.4-authentication-integration.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>to integrate NextAuth.js into the frontend application</iWant>
+    <soThat>we have a secure and standard way to handle user sessions and protection</soThat>
+    <tasks>
+      <task type="frontend">(AC: #1) Install `next-auth` dependency.</task>
+      <task type="frontend">(AC: #1) Create NextAuth config at `src/app/api/auth/[...nextauth]/route.ts` (Next.js 13+ App Router).</task>
+      <task type="frontend">(AC: #1) Configure `CredentialsProvider` to call backend `/api/v1/login/access-token`.</task>
+      <task type="frontend">(AC: #1) Implement `jwt` and `session` callbacks to persist backend token.</task>
+      <task type="frontend">(AC: #1) Wrap application in `SessionProvider` (likely in `layout.tsx`).</task>
+      <task type="frontend">(AC: #2) Create middleware `middleware.ts` to protect `/dashboard` and other private routes.</task>
+      <task type="frontend">(AC: #1) Update `LoginForm` to use `signIn` from `next-auth/react`.</task>
+      <task type="frontend">(AC: #1) Create a basic `Dashboard` page to test protection.</task>
+      <task type="frontend">(AC: #1) Testing: Write unit/integration tests for auth flow if possible (mocking NextAuth).</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion>Given the frontend application is running,</criterion>
+    <criterion>When a user logs in,</criterion>
+    <criterion>Then a secure session (JWT-based) is created and stored.</criterion>
+    <criterion>And protected routes redirect unauthenticated users to the login page.</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/tech-spec-epic-2.md">
+        <snippet region="Story 2.4: Authentication Integration (NextAuth.js)">
+          *   **Library:** `next-auth`
+          *   **Configuration:** Use `Credentials` provider.
+          *   **Callbacks:** `jwt` and `session` to store access_token.
+          *   **Protected Routes:** Use Next.js Middleware.
+        </snippet>
+      </doc>
+    </docs>
+    <code>
+      <snippet path="frontend/package.json">
+        "dependencies": {
+          "next": "16.0.7",
+          "react": "19.2.0"
+          // TODO: Add next-auth
+        }
+      </snippet>
+      <snippet path="frontend/src/lib/api.ts">
+        // Existing login function might be replaced or used by CredentialsProvider
+      </snippet>
+    </code>
+    <dependencies>
+      <dep context="frontend">next-auth (v5 beta or v4 depending on Next.js 15+ compatibility)</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Use NextAuth.js (v5 is recommended for Next.js App Router, often imported as "auth.js" but "next-auth" package still common).</constraint>
+    <constraint>Next.js 15/16 might require specific version. Check compatibility.</constraint>
+    <constraint>Store the backend's JWT in the NextAuth JWT token.</constraint>
+  </constraints>
+
+  <interfaces>
+    <internal-api>
+      NextAuth callbacks:
+      - authorize(credentials): calls backend login
+      - jwt({token, user}): adds backend token to NextAuth token
+      - session({session, token}): adds backend token to Session object
+    </internal-api>
+  </interfaces>
+</story-context>
