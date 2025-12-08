@@ -8,7 +8,7 @@ os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
 
 import pytest
 import pytest_asyncio
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator, Iterator
 
 from httpx import ASGITransport, AsyncClient
 from fastapi.testclient import TestClient
@@ -80,7 +80,7 @@ async def adb() -> AsyncGenerator[AsyncSession, None]:
 # ---------------------
 
 @pytest.fixture
-def db() -> Generator:
+def db() -> Iterator:
     """
     Sync DB session for tests using TestClient.
     Uses same SQLite file as async engine.
@@ -110,7 +110,7 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
-def sync_client() -> Generator[TestClient, None, None]:
+def sync_client() -> Iterator[TestClient]:
     """
     Sync TestClient (for auth tests: test_auth_api.py)
     """
