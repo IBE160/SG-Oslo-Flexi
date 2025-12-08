@@ -110,7 +110,7 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
-def sync_client() -> Generator[TestClient, None]:
+def sync_client() -> Generator[TestClient, None, None]:
     """
     Sync TestClient (for auth tests: test_auth_api.py)
     """
