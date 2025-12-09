@@ -64,4 +64,4 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 2.2: User Login
   - [x] Story 2.3: Basic Onboarding
   - [x] Story 2.4: Authentication Integration (NextAuth.js)
-- [ ] /run-agent-task sm *retrospective "Run a sprint retrospective after the sprint"
+- [x] /run-agent-task sm *retrospective "Run a sprint retrospective after the sprint"
