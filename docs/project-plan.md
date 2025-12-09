@@ -59,7 +59,7 @@ This project plan is adapted from the IBE160 course example to track the progres
 
 ## Fase 4: Authentication
 
-- [ ] Epic 2: User Authentication & Onboarding
+- [x] Epic 2: User Authentication & Onboarding
   - [x] Story 2.1: User Registration
   - [x] Story 2.2: User Login
   - [x] Story 2.3: Basic Onboarding
