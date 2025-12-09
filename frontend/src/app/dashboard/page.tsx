@@ -2,12 +2,15 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import OnboardingWizard from "@/components/OnboardingWizard";
+import { FileUpload } from "@/components/documents/FileUpload";
+import { DocumentList } from "@/components/documents/DocumentList";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -23,40 +26,41 @@ export default function Dashboard() {
     return null;
   }
 
-  // Derive wizard visibility from session state
   const showWizard = session.user?.is_onboarded === false;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      {showWizard && <OnboardingWizard onComplete={() => {}} />}
+      {showWizard && <OnboardingWizard onComplete={() => window.location.reload()} />}
       
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-500 mt-1">Welcome back, {session.user?.email}</p>
+          </div>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium shadow-sm"
           >
             Sign Out
           </button>
         </div>
         
-        <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6">
-          <p className="text-blue-800">
-            Welcome back, <span className="font-semibold">{session.user?.email}</span>!
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border rounded p-4 hover:shadow-md transition">
-            <h2 className="text-xl font-semibold mb-2">My Documents</h2>
-            <p className="text-gray-600">Upload and manage your study materials.</p>
-            <button className="mt-4 text-blue-600 hover:underline">View Documents &rarr;</button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Upload */}
+          <div className="lg:col-span-1">
+             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">New Document</h2>
+                <FileUpload onUploadSuccess={() => setRefreshTrigger(prev => prev + 1)} />
+             </div>
           </div>
-          <div className="border rounded p-4 hover:shadow-md transition">
-            <h2 className="text-xl font-semibold mb-2">Quizzes</h2>
-            <p className="text-gray-600">Review your past quiz performance.</p>
-            <button className="mt-4 text-blue-600 hover:underline">View History &rarr;</button>
+
+          {/* Right Column: List */}
+          <div className="lg:col-span-2">
+             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">My Library</h2>
+                <DocumentList refreshTrigger={refreshTrigger} />
+             </div>
           </div>
         </div>
       </div>

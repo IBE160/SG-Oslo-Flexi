@@ -65,3 +65,13 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 2.3: Basic Onboarding
   - [x] Story 2.4: Authentication Integration (NextAuth.js)
 - [x] /run-agent-task sm *retrospective "Run a sprint retrospective after the sprint"
+
+## Fase 5: Document Processing & Analysis
+
+- [x] /run-agent-task sm *sprint-planning "Plan Sprint 3 for Epic 3"
+- [ ] Epic 3: Document Processing & Analysis
+  - [ ] Story 3.1: File Upload
+  - [ ] Story 3.2: OCR for Scanned Documents
+  - [ ] Story 3.3: "Reader" Agent Analysis
+  - [ ] Story 3.4: Secure Temporary Storage
+  - [ ] Story 3.5: Document & Content Deletion
