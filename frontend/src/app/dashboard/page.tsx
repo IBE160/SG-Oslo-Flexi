@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import OnboardingWizard from "@/components/OnboardingWizard";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -22,8 +23,13 @@ export default function Dashboard() {
     return null;
   }
 
+  // Derive wizard visibility from session state
+  const showWizard = session.user?.is_onboarded === false;
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      {showWizard && <OnboardingWizard onComplete={() => {}} />}
+      
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>

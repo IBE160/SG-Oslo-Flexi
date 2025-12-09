@@ -1,0 +1,10 @@
+<context>
+  <story id="2.3">
+    <references>
+      <file path="docs/story-2.3-basic-onboarding.md" description="Main Story Definition"/>
+      <file path="docs/tech-spec-epic-2.md" description="Technical Specification"/>
+      <file path="backend/app/models/user.py" description="User Model"/>
+      <file path="frontend/src/app/dashboard/page.tsx" description="Dashboard Page"/>
+    </references>
+  </story>
+</context>

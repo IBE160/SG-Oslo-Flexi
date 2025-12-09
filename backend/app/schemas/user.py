@@ -10,6 +10,7 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     id: UUID
     is_active: bool
+    is_onboarded: bool
 
     class Config:
         from_attributes = True
