@@ -42,7 +42,7 @@ export default function OnboardingWizard({ onComplete }: OnboardingWizardProps) 
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Welcome to AI Buddy! 👋</h2>
             <p className="text-gray-600 mb-6">
-              We're excited to help you study smarter. Let's take a quick tour.
+              We&apos;re excited to help you study smarter. Let&apos;s take a quick tour.
             </p>
           </div>
         )}
@@ -51,7 +51,7 @@ export default function OnboardingWizard({ onComplete }: OnboardingWizardProps) 
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">📂 Upload Documents</h2>
             <p className="text-gray-600 mb-6">
-              Start by uploading your notes, PDFs, or images. We'll analyze them for you.
+              Start by uploading your notes, PDFs, or images. We&apos;ll analyze them for you.
             </p>
           </div>
         )}

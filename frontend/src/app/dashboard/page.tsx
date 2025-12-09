@@ -2,22 +2,18 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import OnboardingWizard from "@/components/OnboardingWizard";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
-    if (status === "authenticated" && session?.user?.is_onboarded === false) {
-      setShowWizard(true);
-    }
-  }, [status, router, session]);
+  }, [status, router]);
 
   if (status === "loading") {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -27,9 +23,12 @@ export default function Dashboard() {
     return null;
   }
 
+  // Derive wizard visibility from session state
+  const showWizard = session.user?.is_onboarded === false;
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      {showWizard && <OnboardingWizard onComplete={() => setShowWizard(false)} />}
+      {showWizard && <OnboardingWizard onComplete={() => {}} />}
       
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-6">

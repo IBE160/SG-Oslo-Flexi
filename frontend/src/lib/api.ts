@@ -1,17 +1,17 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-interface UserResponse {
-  id: string;
-  email: string;
-}
-
 interface AuthResponse {
   access_token: string;
   token_type: string;
   detail?: string;
 }
 
-export const registerUser = async (data: any) => {
+interface RegisterData {
+  email: string;
+  password: string;
+}
+
+export const registerUser = async (data: RegisterData) => {
   const response = await fetch(`${API_URL}/api/v1/users/register`, {
     method: "POST",
     headers: {
