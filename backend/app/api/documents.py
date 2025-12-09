@@ -89,7 +89,8 @@ async def upload_document(
     
     # 6. Enqueue Job
     try:
-        q.enqueue("app.workers.process_document.process_document", str(doc.id))
+        # Import string must match where the function is importable by RQ worker
+        q.enqueue("worker.process_document", str(doc.id))
     except Exception as e:
         print(f"Failed to enqueue job: {e}")
         # We don't fail the request, but log it. The user can retry or we have a retry mechanism.

@@ -34,3 +34,19 @@ class DocumentService:
     async def get_user_documents(db: AsyncSession, user_id: UUID) -> List[Document]:
         result = await db.execute(select(Document).where(Document.user_id == user_id).order_by(Document.created_at.desc()))
         return result.scalars().all()
+
+    @staticmethod
+    async def update_status(db: AsyncSession, doc: Document, status: DocumentStatus) -> Document:
+        doc.status = status
+        db.add(doc)
+        await db.commit()
+        await db.refresh(doc)
+        return doc
+
+    @staticmethod
+    async def update_extracted_text(db: AsyncSession, doc: Document, text: str) -> Document:
+        doc.extracted_text = text
+        db.add(doc)
+        await db.commit()
+        await db.refresh(doc)
+        return doc
