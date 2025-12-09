@@ -11,23 +11,38 @@ interface AuthResponse {
   detail?: string;
 }
 
-export async function registerUser(email: string, password: string): Promise<UserResponse> {
+export const registerUser = async (data: any) => {
   const response = await fetch(`${API_URL}/api/v1/users/register`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(data),
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    throw new Error(data.error?.message || 'Registration failed');
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || "Registration failed");
   }
 
-  return data.data;
-}
+  return response.json();
+};
+
+export const completeOnboarding = async (token: string) => {
+  const response = await fetch(`${API_URL}/api/v1/users/onboarding`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to complete onboarding");
+  }
+
+  return response.json();
+};
 
 export async function login(username: string, password: string): Promise<AuthResponse> {
   const formData = new URLSearchParams();
