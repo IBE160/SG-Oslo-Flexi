@@ -1,6 +1,6 @@
 # Story 2.3: Basic Onboarding
 
-**Status:** pending
+**Status:** done
 
 ## Story
 
@@ -37,19 +37,19 @@
 
 ### Backend
 
-*   [ ] (AC: #3) **Model Update:** Add `is_onboarded` (boolean, default `false`) to the `User` model.
-*   [ ] (AC: #3) **Schema Update:** Update `UserRead` schema to include `is_onboarded`.
-*   [ ] (AC: #3) **Migration:** Create and apply Alembic migration for the `users` table change.
-*   [ ] (AC: #3) **Endpoint:** Create `POST /api/v1/users/onboarding` (or similar) to update the status to `true`.
-*   [ ] (AC: #3) **Testing:** Verify the status update persists and is returned in user details.
+*   [x] (AC: #3) **Model Update:** Add `is_onboarded` (boolean, default `false`) to the `User` model.
+*   [x] (AC: #3) **Schema Update:** Update `UserRead` schema to include `is_onboarded`.
+*   [x] (AC: #3) **Migration:** Create and apply Alembic migration for the `users` table change.
+*   [x] (AC: #3) **Endpoint:** Create `POST /api/v1/users/onboarding` (or similar) to update the status to `true`.
+*   [x] (AC: #3) **Testing:** Verify the status update persists and is returned in user details.
 
 ### Frontend
 
-*   [ ] (AC: #1, #4) **Session:** Update NextAuth session types to include `is_onboarded`.
-*   [ ] (AC: #2) **Component:** Create `OnboardingWizard` component (UI for Welcome -> Upload -> Generate).
-*   [ ] (AC: #3) **Service:** Add API call `completeOnboarding` to the frontend service layer.
-*   [ ] (AC: #1, #4) **Integration:** In the main Dashboard/Layout, check `user.is_onboarded`. If false, mount `OnboardingWizard`.
-*   [ ] (AC: #3) **Logic:** On wizard completion, call API and locally update session/state to close wizard.
+*   [x] (AC: #1, #4) **Session:** Update NextAuth session types to include `is_onboarded`.
+*   [x] (AC: #2) **Component:** Create `OnboardingWizard` component (UI for Welcome -> Upload -> Generate).
+*   [x] (AC: #3) **Service:** Add API call `completeOnboarding` to the frontend service layer.
+*   [x] (AC: #1, #4) **Integration:** In the main Dashboard/Layout, check `user.is_onboarded`. If false, mount `OnboardingWizard`.
+*   [x] (AC: #3) **Logic:** On wizard completion, call API and locally update session/state to close wizard.
 
 ## Dev Agent Record
 

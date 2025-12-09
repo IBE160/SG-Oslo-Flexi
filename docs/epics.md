@@ -88,7 +88,7 @@
     *   When I enter my correct email and password,
     *   Then I am logged in and redirected to my dashboard.
 
-**Story 2.3: Basic Onboarding**
+**Story 2.3: Basic Onboarding** (Status: Done)
 
 *   **As a new user,** I want to be guided through the core features of the application, so that I can quickly understand how to use it.
 *   **Acceptance Criteria:**

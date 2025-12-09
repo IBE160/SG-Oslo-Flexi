@@ -14,6 +14,14 @@
     *   When I enter my email and a valid password,
     *   Then my account is created and I am logged in.
 
+**Story 2.3: Basic Onboarding** (Status: Done)
+
+*   **As a new user,** I want to be guided through the core features of the application, so that I can quickly understand how to use it.
+*   **Acceptance Criteria:**
+    *   Given I have just registered,
+    *   When I log in for the first time,
+    *   Then I am shown a brief, interactive tutorial that guides me through uploading a document and generating a quiz.
+
 **Story 2.2: User Login**
 
 *   **As a registered user,** I want to be able to log in to my account, so that I can access my saved progress and materials.
