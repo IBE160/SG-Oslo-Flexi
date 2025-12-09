@@ -1,4 +1,4 @@
-# generated: 2025-12-08
+# generated: 2025-12-09
 # project: ibe160
 # project_key: ibe160
 # tracking_system: file-system
@@ -29,7 +29,7 @@
 # - SM typically drafts next story after previous one is 'done' to incorporate learnings
 # - Dev moves story to 'review', SM reviews, then Dev moves to 'done'
 
-generated: 2025-12-08
+generated: 2025-12-09
 project: ibe160
 project_key: ibe160
 tracking_system: file-system
@@ -48,7 +48,7 @@ development_status:
   epic-2: contexted
   2-1-user-registration: done
   2-2-user-login: done
-  2-3-basic-onboarding: backlog
+  2-3-basic-onboarding: done
   2-4-authentication-integration: done
   epic-2-retrospective: completed
 
