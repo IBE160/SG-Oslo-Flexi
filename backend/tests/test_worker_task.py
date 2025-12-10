@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
-from backend.worker import process_document_async
+from worker import process_document_async
 from app.models.document import DocumentStatus
 
 @pytest.mark.asyncio
@@ -12,16 +12,16 @@ async def test_process_document_success():
     mock_doc.mime_type = "application/pdf"
     mock_doc.filename = "test.pdf"
 
-    with patch("backend.worker.AsyncSessionLocal") as mock_session_cls:
+    with patch("worker.AsyncSessionLocal") as mock_session_cls:
         mock_db = AsyncMock()
         mock_session_cls.return_value.__aenter__.return_value = mock_db
         
-        with patch("backend.worker.DocumentService") as mock_service:
+        with patch("worker.DocumentService") as mock_service:
             mock_service.get_document = AsyncMock(return_value=mock_doc)
             mock_service.update_status = AsyncMock()
             mock_service.update_extracted_text = AsyncMock()
             
-            with patch("backend.worker.OCRService") as mock_ocr:
+            with patch("worker.OCRService") as mock_ocr:
                 mock_ocr.extract_text = AsyncMock(return_value="Extracted Content")
                 
                 await process_document_async("123")
@@ -40,15 +40,15 @@ async def test_process_document_failure():
     mock_doc = MagicMock()
     mock_doc.id = "123"
 
-    with patch("backend.worker.AsyncSessionLocal") as mock_session_cls:
+    with patch("worker.AsyncSessionLocal") as mock_session_cls:
         mock_db = AsyncMock()
         mock_session_cls.return_value.__aenter__.return_value = mock_db
         
-        with patch("backend.worker.DocumentService") as mock_service:
+        with patch("worker.DocumentService") as mock_service:
             mock_service.get_document = AsyncMock(return_value=mock_doc)
             mock_service.update_status = AsyncMock()
             
-            with patch("backend.worker.OCRService") as mock_ocr:
+            with patch("worker.OCRService") as mock_ocr:
                 # Simulate OCR failure
                 mock_ocr.extract_text = AsyncMock(side_effect=Exception("OCR Failed"))
                 

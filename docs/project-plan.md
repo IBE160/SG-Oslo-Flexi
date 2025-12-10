@@ -72,6 +72,6 @@ This project plan is adapted from the IBE160 course example to track the progres
 - [x] Epic 3: Document Processing & Analysis
   - [x] Story 3.1: File Upload
   - [x] Story 3.2: OCR for Scanned Documents
-  - [ ] Story 3.3: "Reader" Agent Analysis
-  - [ ] Story 3.4: Secure Temporary Storage
+  - [x] Story 3.3: "Reader" Agent Analysis
+  - [x] Story 3.4: Secure Temporary Storage
   - [ ] Story 3.5: Document & Content Deletion

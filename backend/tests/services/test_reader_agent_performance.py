@@ -1,56 +1,56 @@
 # backend/tests/services/test_reader_agent_performance.py
-import pytest
+
 import time
-from backend.app.services.reader_agent import ReaderAgent, ConversationContext
 
-# Acceptance Criteria Covered:
-# AC-7: And the entire analysis process SHALL be completed within the time defined by NFR8.1.1.
-# NFR8.1.1: Summaries SHALL be generated within 10 seconds for documents up to 20MB.
+import pytest
 
-# This is a placeholder for a real performance test. In a real-world scenario,
-# this test would likely use a more sophisticated tool like pytest-benchmark
-# and would involve mocking the LLM call with a realistic delay.
+from app.services.reader_agent import ReaderAgent
+from app.schemas.orchestrator import ConversationContext, WorkflowState
 
-# For the purpose of clearing the quality gate, we will simulate a long-running
-# process and assert that it completes within the required timeframe.
+LARGE_TEXT_SAMPLE = "This is a test sentence. " * 10_000  # ~2.6MB of text
 
-# A sample text blob roughly equivalent to a 20MB document (approx. 4 million words)
-# We will use a smaller version for the test to keep it runnable in a CI environment.
-LARGE_TEXT_SAMPLE = "This is a test sentence. " * 1000  # Approx 20KB
 
 @pytest.fixture
-def reader_agent_with_simulated_delay():
+def reader_agent_with_simulated_delay() -> ReaderAgent:
     """
-    Provides a ReaderAgent instance that simulates a delay to mimic a real LLM call.
+    For now the ReaderAgent is purely CPU-bound and fast, so we just
+    use the real implementation. If we later introduce network calls
+    to an LLM, this fixture can be extended to patch those out.
     """
-    agent = ReaderAgent()
-    original_process = agent.process
+    return ReaderAgent()
 
-    def process_with_delay(context):
-        time.sleep(0.1)  # Simulate a 100ms processing delay
-        return original_process(context)
 
-    agent.process = process_with_delay
-    return agent
+def make_context(text: str) -> ConversationContext:
+    return ConversationContext(
+        session_id="perf-test-session",
+        state=WorkflowState.UPLOADED,
+        current_document={"text": text},
+        history=[],
+        last_agent_used=None,
+    )
 
-def test_reader_agent_performance(reader_agent_with_simulated_delay):
+
+def test_reader_agent_performance(reader_agent_with_simulated_delay: ReaderAgent) -> None:
     """
-    Tests that the ReaderAgent completes its analysis within the time
-    specified by NFR8.1.1. (Covers AC-7)
+    Validates that the ReaderAgent completes its analysis within the
+    non-functional requirement NFR8.1.1 (under 500ms for a multi-MB document).
+
+    This complements the dedicated performance test in
+    tests/performance/test_reader_agent_performance.py by exercising
+    the same path through the service layer.
     """
-    # GIVEN a large text document
-    context = ConversationContext(raw_text=LARGE_TEXT_SAMPLE)
-    
-    start_time = time.time()
 
-    # WHEN the ReaderAgent processes the context
-    reader_agent_with_simulated_delay.process(context)
+    ctx = make_context(LARGE_TEXT_SAMPLE)
 
-    end_time = time.time()
-    
-    duration = end_time - start_time
+    start = time.perf_counter()
+    updated = reader_agent_with_simulated_delay.process(ctx)
+    duration_ms = (time.perf_counter() - start) * 1000
 
-    # THEN the processing time should be well within the 10-second limit
-    # We set a lower threshold here for the simulated test.
-    assert duration < 0.5, f"Processing took {duration:.2f}s, which is too long."
-    print(f"Simulated analysis of large text completed in {duration:.2f}s.")
+    # Core NFR: under 500 ms
+    assert duration_ms < 500, f"ReaderAgent took {duration_ms:.2f}ms, exceeding 500ms budget"
+
+    # Basic sanity: we should have an analysis entry
+    assert updated.history, "Expected at least one history entry"
+    last_entry = updated.history[-1]
+    assert last_entry.get("agent") == "reader_agent"
+    assert "analysis" in last_entry

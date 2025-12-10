@@ -1,8 +1,8 @@
 # backend/tests/services/test_orchestrator_routing.py
 import pytest
 from unittest.mock import MagicMock
-from backend.app.services.orchestrator import Orchestrator
-from backend.app.schemas.orchestrator import ConversationContext, WorkflowState
+from app.services.orchestrator import Orchestrator
+from app.schemas.orchestrator import ConversationContext, WorkflowState
 
 # Acceptance Criteria Covered:
 # AC-1: Given a document has been successfully uploaded...

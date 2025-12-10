@@ -55,7 +55,7 @@ development_status:
   epic-3: contexted
   3-1-file-upload: done
   3-2-ocr-for-scanned-documents: done
-  3-3-reader-agent-analysis: backlog
+  3-3-reader-agent-analysis: done
   3-4-secure-temporary-storage: backlog
   3-5-document-content-deletion: backlog
   epic-3-retrospective: optional

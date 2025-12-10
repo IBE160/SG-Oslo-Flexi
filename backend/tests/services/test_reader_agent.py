@@ -1,57 +1,86 @@
-import pytest
-from unittest.mock import patch
-from backend.app.services.reader_agent import ReaderAgent, ConversationContext
-import json
+# backend/tests/services/test_reader_agent.py
 
-# Acceptance Criteria Covered:
-# AC-4: And the agent SHALL generate a concise summary of the document.
-# AC-5: And the agent SHALL extract a list of key concepts from the document.
-# AC-6: And the generated summary and key concepts SHALL be stored in the user's session context.
+import pytest
+
+from app.services.reader_agent import ReaderAgent
+from app.schemas.orchestrator import ConversationContext, WorkflowState
+
 
 @pytest.fixture
-def reader_agent():
-    """Provides a ReaderAgent instance for testing."""
+def reader_agent() -> ReaderAgent:
     return ReaderAgent()
 
-@patch('backend.app.services.reader_agent.ReaderAgent._call_llm')
-def test_reader_agent_parses_llm_response(mock_call_llm, reader_agent):
+
+def make_context(text: str) -> ConversationContext:
     """
-    Tests that the ReaderAgent correctly parses the simulated LLM response
-    and updates the context object. (Covers AC-4, AC-5, AC-6)
+    Helper to construct a ConversationContext in the same shape the
+    orchestrator would use in production.
     """
-    # GIVEN a mock LLM response
-    mock_response = {
-        "analysis": {
-            "summary": "This is a mock summary.",
-            "key_concepts": ["MockConcept1", "MockConcept2"]
-        }
-    }
-    mock_call_llm.return_value = json.dumps(mock_response)
-    
-    # AND raw text is available in the context
-    raw_text = "This text will be sent to the mocked LLM."
-    context = ConversationContext(raw_text=raw_text)
+    return ConversationContext(
+        session_id="test-session",
+        state=WorkflowState.UPLOADED,
+        current_document={"text": text},
+        history=[],
+        last_agent_used=None,
+    )
 
-    # WHEN the ReaderAgent processes the context
-    updated_context = reader_agent.process(context)
 
-    # THEN the _call_llm method should have been called
-    mock_call_llm.assert_called_once_with(raw_text)
-
-    # AND the context should be updated with data from the mock response
-    assert updated_context.summary == "This is a mock summary."
-    assert updated_context.key_concepts == ["MockConcept1", "MockConcept2"]
-
-def test_reader_agent_handles_empty_text(reader_agent):
+def test_reader_agent_produces_analysis_entry(reader_agent: ReaderAgent) -> None:
     """
-    Tests that the ReaderAgent handles empty input gracefully without errors.
+    ReaderAgent should add an analysis entry to the context history and mark
+    itself as the last agent used.
     """
-    # GIVEN the context has no raw text
-    context = ConversationContext(raw_text="")
 
-    # WHEN the ReaderAgent processes the context
-    updated_context = reader_agent.process(context)
+    raw_text = """My Sample Document
 
-    # THEN the summary and key concepts should be empty
-    assert updated_context.summary == ""
-    assert len(updated_context.key_concepts) == 0
+INTRODUCTION:
+- First key point
+- Second key point
+This report must be completed by Friday.
+"""
+
+    ctx = make_context(raw_text)
+
+    updated = reader_agent.process(ctx)
+
+    # ReaderAgent should have been recorded as last agent
+    assert updated.last_agent_used == "reader_agent"
+
+    # History should contain at least one entry
+    assert updated.history, "Expected at least one history entry"
+    last_entry = updated.history[-1]
+
+    assert last_entry.get("agent") == "reader_agent"
+    analysis = last_entry.get("analysis")
+    assert isinstance(analysis, dict), "Expected 'analysis' dict in history entry"
+
+    # Basic structure checks
+    assert analysis.get("title") == "My Sample Document"
+    assert "INTRODUCTION:" in analysis.get("headings", [])
+    assert analysis.get("doc_type") == "report"
+    assert isinstance(analysis.get("summary"), str)
+    assert analysis.get("summary"), "Summary should not be empty"
+
+    key_points = analysis.get("key_points", [])
+    assert len(key_points) > 0
+    # We truncate at 5, so it should never exceed 5
+    assert len(key_points) <= 5
+
+
+def test_reader_agent_handles_empty_text(reader_agent: ReaderAgent) -> None:
+    """
+    When there is no text in the current_document, the agent should not crash
+    and should record an error entry instead.
+    """
+
+    ctx = make_context("")
+
+    updated = reader_agent.process(ctx)
+
+    assert updated.last_agent_used == "reader_agent"
+    assert updated.history, "Expected an error entry in history"
+
+    last_entry = updated.history[-1]
+    assert last_entry.get("agent") == "reader_agent"
+    assert "error" in last_entry
+    assert "No text found" in last_entry["error"]
