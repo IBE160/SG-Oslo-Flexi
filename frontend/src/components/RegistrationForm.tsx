@@ -15,7 +15,7 @@ export default function RegistrationForm() {
     e.preventDefault();
     setError(null);
     try {
-      await registerUser(email, password);
+      await registerUser({ email, password });
       setSuccess(true);
       setTimeout(() => {
         router.push('/login');

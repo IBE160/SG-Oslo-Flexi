@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>3</storyId>
+    <title>"Reader" Agent Analysis</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-10</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/story-3.3-reader-agent-analysis.md</sourceStoryPath>
+  </metadata>
+  <story>
+    <asA>a user</asA>
+    <iWant>the "Reader" agent to analyze the content of my uploaded document</iWant>
+    <soThat>it can be used to generate study materials</soThat>
+    <tasks>
+- [ ] **Backend:**
+    - [ ] Implement the `ReaderAgent` service. (AC: #3, #4, #5, #6)
+        - [ ] Add a method to receive the `ConversationContext`.
+        - [ ] Implement the logic to call the LLM with a prompt for summarization and key concept extraction.
+        - [ ] Implement the logic to parse the LLM response and update the `ConversationContext`.
+    - [ ] **Stateful Orchestrator:**
+        - [ ] Add a routing rule to direct analysis requests to the `ReaderAgent`. (AC: #2)
+- [ ] **Testing:**
+    - [ ] Write unit tests for the `ReaderAgent` service to verify LLM interaction and context updates. (AC: #4, #5, #6)
+    - [ ] Write an integration test to ensure the `Stateful Orchestrator` correctly routes a request to the `ReaderAgent` and the session context is updated. (AC: #1, #2, #6)
+    - [ ] Write a performance test to ensure the analysis completes within the NFR timeframe. (AC: #7)
+    </tasks>
+  </story>
+  <acceptanceCriteria>
+1.  **Given** a document has been successfully uploaded and its text extracted (via OCR if necessary),
+2.  **When** the `Stateful Orchestrator` routes the analysis request to the "Reader" agent,
+3.  **Then** the "Reader" agent SHALL process the document's `raw_text`.
+4.  **And** the agent SHALL generate a concise summary of the document.
+5.  **And** the agent SHALL extract a list of key concepts from the document.
+6.  **And** the generated summary and key concepts SHALL be stored in the user's session context.
+7.  **And** the entire analysis process SHALL be completed within the time defined by **NFR8.1.1**.
+  </acceptanceCriteria>
+  <artifacts>
+    <docs>
+        <doc>
+            <path>docs/epics.md</path>
+            <title>AI Buddy - Epics</title>
+            <section>Epic 3: Document Processing &amp; Analysis</section>
+            <snippet>Goal: Build the core document processing pipeline, including file upload, OCR, and the "Reader" agent for content analysis.</snippet>
+        </doc>
+        <doc>
+            <path>docs/PRD.md</path>
+            <title>Product Requirements Document: AI Buddy</title>
+            <section>7.6. Multi-Agent Orchestration</section>
+            <snippet>FR6.1: The backend SHALL orchestrate a "Reader" agent to process and analyze uploaded documents.</snippet>
+        </doc>
+        <doc>
+            <path>docs/architecture.md</path>
+            <title>Architecture: AI Buddy</title>
+            <section>9. Novel Patterns - Stateful Orchestrator</section>
+            <snippet>The Stateful Orchestrator is a central backend service that manages the lifecycle of a user's interaction. It maintains the conversation state and routes requests to the appropriate specialist AI agent (e.g., Reader, Coach) based on the current context.</snippet>
+        </doc>
+    </docs>
+    <code>
+      <file>
+        <path>backend/app/services/orchestrator.py</path>
+        <kind>service</kind>
+        <symbol>StatefulOrchestrator</symbol>
+        <reason>This service will need to be modified to add a routing rule for the new ReaderAgent.</reason>
+      </file>
+      <file>
+        <path>backend/app/services/reader_agent.py</path>
+        <kind>service</kind>
+        <symbol>ReaderAgent</symbol>
+        <reason>This is the new service to be created for this story.</reason>
+      </file>
+    </code>
+    <dependencies>
+        <ecosystem name="Python">
+            <dependency>fastapi</dependency>
+            <dependency>uvicorn</dependency>
+            <dependency>redis</dependency>
+            <dependency>rq</dependency>
+        </ecosystem>
+        <ecosystem name="Node.js">
+            <dependency>next</dependency>
+            <dependency>react</dependency>
+            <dependency>typescript</dependency>
+        </ecosystem>
+    </dependencies>
+  </artifacts>
+  <constraints>
+    <constraint>The analysis must be grounded in the provided document text to avoid hallucinations.</constraint>
+    <constraint>All timestamps on the backend/database will be in UTC.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+        <name>ReaderAgent.process</name>
+        <kind>function signature</kind>
+        <signature>process(context: ConversationContext) -> ConversationContext</signature>
+        <path>backend/app/services/reader_agent.py</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+        We will use the "Testing Pyramid" strategy: many Unit Tests (Pytest, Jest), some Integration Tests, and a few End-to-End Tests.
+    </standards>
+    <locations>
+        - backend/tests/
+        - frontend/tests/
+    </locations>
+    <ideas>
+        - (AC: #4, #5, #6) Unit test the `ReaderAgent` with mock LLM responses to ensure it correctly parses summaries and key concepts and updates the context.
+        - (AC: #1, #2, #6) Integration test the `StatefulOrchestrator` to verify that a request with a "read document" intent is correctly routed to the `ReaderAgent`.
+        - (AC: #7) Performance test the end-to-end analysis process to ensure it meets the 10-second requirement under load.
+    </ideas>
+  </tests>
+</story-context>

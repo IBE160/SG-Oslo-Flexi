@@ -1,0 +1,112 @@
+<context>
+  <story id="3.1" name="File Upload">
+    <description>
+      Implement the file upload functionality allowing users to upload PDF, DOCX, or TXT files.
+      This serves as the entry point for the document processing pipeline.
+    </description>
+    
+    <frontend>
+      <framework>Next.js 14 (App Router)</framework>
+      <ui_library>Shadcn/UI</ui_library>
+      <components>
+        <component name="FileUpload">
+          <path>src/components/documents/FileUpload.tsx</path>
+          <responsibilities>
+            - Drag-and-drop zone using 'react-dropzone' or similar.
+            - File type validation (accept: .pdf, .docx, .txt).
+            - File size validation (max 20MB).
+            - Visual feedback (progress bar, success/error toasts).
+            - API interaction: POST /api/v1/documents/
+          </responsibilities>
+        </component>
+        <component name="DocumentList">
+          <path>src/components/documents/DocumentList.tsx</path>
+          <responsibilities>
+            - Fetch and display user's documents.
+            - Show status badges (uploading, processing, ready, error).
+            - Real-time updates (polling or optimistic UI).
+          </responsibilities>
+        </component>
+      </components>
+      <pages>
+        <page route="/dashboard">
+          <path>src/app/dashboard/page.tsx</path>
+          <integration>Embed FileUpload and DocumentList components.</integration>
+        </page>
+      </pages>
+    </frontend>
+
+    <backend>
+      <framework>FastAPI</framework>
+      <api_endpoint>
+        <method>POST</method>
+        <path>/api/v1/documents/</path>
+        <module>app.api.documents</module>
+        <function>upload_document</function>
+        <responsibilities>
+          - Authenticate user (Dependency: get_current_user).
+          - Validate Content-Type (MIME checking with python-magic).
+          - Validate Content-Length.
+          - Generate UUID for storage filename.
+          - Stream file to secure local volume (UPLOAD_DIR).
+          - Create DB record in 'documents' table.
+          - Enqueue background job 'process_document'.
+          - Return 202 Accepted with document ID.
+        </responsibilities>
+      </api_endpoint>
+      
+      <services>
+        <service name="StorageService">
+          <module>app.services.storage</module>
+          <function>save_upload(file, uuid)</function>
+        </service>
+        <service name="DocumentService">
+          <module>app.services.documents</module>
+          <function>create_document_record(db, user_id, meta)</function>
+        </service>
+      </services>
+      
+      <data_model>
+        <table name="documents">
+          <column name="id" type="UUID" pk="true" />
+          <column name="user_id" type="UUID" fk="users.id" />
+          <column name="filename" type="String" />
+          <column name="file_path" type="String" />
+          <column name="mime_type" type="String" />
+          <column name="file_size" type="Integer" />
+          <column name="status" type="Enum" values="pending, processing, completed, failed" />
+          <column name="created_at" type="DateTime" />
+        </table>
+      </data_model>
+    </backend>
+
+    <integration>
+      <auth>
+        - Frontend: Attach Bearer token from NextAuth session to API requests.
+        - Backend: 'get_current_user' dependency ensures only authenticated users can upload.
+      </auth>
+      <async_pipeline>
+        - Trigger: After successful upload and DB record creation.
+        - Action: 'queue.enqueue("app.workers.process_document", doc_id)'
+        - Link to Story 3.2: The worker will pick up this job to start OCR.
+      </async_pipeline>
+      <security>
+        - File Storage: Files stored outside web root. No public URL.
+        - UUIDs: Prevent filename collisions and traversal attacks.
+        - Validation: 'python-magic' used to verify actual file content matches extension.
+      </security>
+    </integration>
+
+    <validation_notes>
+      <alignment>
+        - Frontend: Matches Next.js App Router structure and Shadcn/UI usage.
+        - Backend: Matches FastAPI structure and dependency injection pattern.
+        - Data Model: Matches Story 3.1 and Tech Spec requirements.
+      </alignment>
+      <completeness>
+        - Security: python-magic and private storage volume are correctly specified.
+        - Async: Explicit link to 'process_document' worker job ensures integration with Story 3.2.
+      </completeness>
+    </validation_notes>
+  </story>
+</context>

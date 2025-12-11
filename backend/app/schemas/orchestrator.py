@@ -6,6 +6,8 @@ class WorkflowState(str, Enum):
     UPLOADED = "uploaded"
     PROCESSING = "processing"
     OCR = "ocr"
+    OCR_COMPLETED = "ocr_completed"
+    ANALYZING = "analyzing"
     ANALYZED = "analyzed"
     COMPLETED = "completed"
     FAILED = "failed"

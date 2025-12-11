@@ -1,0 +1,118 @@
+<story-context id="3-2-ocr-for-scanned-documents" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>2</storyId>
+    <title>OCR for Scanned Documents</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-12-09</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/story-3.2-ocr-for-scanned-documents.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>the system to automatically extract text from my uploaded documents, including scanned PDFs and images</iWant>
+    <soThat>I can use my handwritten notes and non-digital study materials for generating summaries and quizzes</soThat>
+    <tasks>
+      - Setup &amp; Configuration (Add deps: google-cloud-vision, pypdf, python-docx, rq)
+      - Implement OCR Service (Hybrid strategy: pypdf + GCV fallback)
+      - Implement Background Worker (process_document task)
+      - API Integration (Enqueue job on upload)
+      - Error Handling &amp; Logging
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    - Scenario 1: Native PDF Extraction (Fast Path) - Use pypdf, no GCV call
+    - Scenario 2: Scanned PDF/Image Extraction (OCR Path) - Detect low density, use GCV
+    - Scenario 3: Asynchronous Workflow - Status pending/processing, non-blocking API
+    - Scenario 4: Error Handling - Graceful failure, status failed, logging
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/tech-spec-epic-3.md</path>
+        <title>Technical Specification: Epic 3</title>
+        <section>Story 3.2: OCR &amp; Text Extraction</section>
+        <snippet>Strategy: PDF (pypdf -> density check -> OCR), Images (Direct OCR), DOCX (python-docx). OCR Provider: Google Cloud Vision API.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture</title>
+        <section>2.1. High-Level Data Flow</section>
+        <snippet>Worker picks up job. Text Extraction: If native PDF -> local libs. If image/scanned -> GCV. Analysis -> LLM. Save -> DB.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics</title>
+        <section>Story 3.2: OCR for Scanned Documents</section>
+        <snippet>As a user, I want the system to be able to read text from scanned documents, so that I can use my handwritten notes.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <item>
+        <path>backend/app/models/document.py</path>
+        <kind>model</kind>
+        <symbol>Document</symbol>
+        <lines>11-23</lines>
+        <reason>Needs update to include extracted_text column (though schema read suggests it might be missing or need verifying)</reason>
+      </item>
+      <item>
+        <path>backend/app/api/documents.py</path>
+        <kind>controller</kind>
+        <symbol>upload_document</symbol>
+        <lines>40-84</lines>
+        <reason>Currently enqueues job but logic needs to ensure it points to the new worker task</reason>
+      </item>
+      <item>
+        <path>backend/app/services/documents.py</path>
+        <kind>service</kind>
+        <symbol>DocumentService</symbol>
+        <reason>Will need method to update document with extracted text and status</reason>
+      </item>
+    </code>
+    <dependencies>
+      <pkg>google-cloud-vision</pkg>
+      <pkg>pypdf</pkg>
+      <pkg>python-docx</pkg>
+      <pkg>rq</pkg>
+      <pkg>redis</pkg>
+      <pkg>python-multipart</pkg>
+      <pkg>python-magic</pkg>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Asynchronous processing using Redis &amp; RQ
+    - Cost optimization: Check text density before calling GCV
+    - Secure storage: Files not accessible via public URL
+    - Error handling: Must set status to FAILED on error
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>OCRService.extract_text</name>
+      <kind>method</kind>
+      <signature>async def extract_text(file_path: str, mime_type: str) -> str</signature>
+      <path>backend/app/services/ocr_service.py</path>
+    </interface>
+    <interface>
+      <name>process_document</name>
+      <kind>task</kind>
+      <signature>def process_document(document_id: str)</signature>
+      <path>backend/worker.py</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Use Pytest. Mock external APIs (GCV) using unittest.mock or pytest-mock.</standards>
+    <locations>backend/tests/services/test_ocr_service.py, backend/tests/test_worker_task.py</locations>
+    <ideas>
+      - Test pypdf extraction on a clean PDF (mocked file)
+      - Test GCV fallback on a simulated scanned PDF (mock density check)
+      - Test RQ job enqueueing
+      - Test error state persistence
+    </ideas>
+  </tests>
+</story-context>
