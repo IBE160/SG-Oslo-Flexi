@@ -144,13 +144,23 @@
     *   Then it is not accessible via a public URL.
     *   And it is stored with a unique identifier associated with the user session or ID.
 
-**Story 3.5: Document & Content Deletion**
+**Story 3.5: Manual Document & Content Deletion**
 
-*   **As a user (or system administrator),** I want uploaded documents and generated content to be deleted upon request or after a set time, so that my data privacy is respected.
+*   **As a user,** I want to be able to manually delete my uploaded documents and all associated content, so that I can manage my data and privacy.
 *   **Acceptance Criteria:**
     *   Given a document has been processed and stored,
-    *   When the user clicks "Delete" OR a defined TTL (Time-To-Live) expires,
-    *   Then the original file and all associated database records (summary, quiz) are permanently removed from the system.
+    *   When the user clicks "Delete",
+    *   Then the original file and all associated database records (summary, quiz, etc.) are permanently removed from the system.
+    *   And the API SHALL respond with 204 No Content upon successful deletion.
+    *   And the system SHALL prevent a user from deleting documents they do not own.
+
+**Story 3.6: TTL-based Automated Deletion**
+
+*   **As a system administrator,** I want documents and generated content to be deleted automatically after a set time, so that system storage is kept clean and data is not retained indefinitely.
+*   **Acceptance Criteria:**
+    *   Given a document has been stored for longer than the defined Time-To-Live (TTL) period,
+    *   When a scheduled job runs,
+    *   Then the original file and all associated database records are permanently removed using the same deletion logic as Story 3.5.
 
 ## Epic 4: AI-Powered Content Generation
 

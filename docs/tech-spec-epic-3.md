@@ -189,8 +189,7 @@ graph LR
   - Auth: Consistent (Bearer Token/JWT).
 
 ### 8.2. Gaps & Clarifications
-- **Gap:** The automated "Time-To-Live" (TTL) deletion mentioned in Story 3.5 acceptance criteria ("...OR a defined TTL expires") is not explicitly architected.
-  - *Recommendation:* Add a periodic background job (e.g., using `rq-scheduler` or a simple cron) to scan for and delete documents older than the TTL.
+- **Gap Deferral:** The automated "Time-To-Live" (TTL) deletion mentioned in the original Story 3.5 acceptance criteria has been formally deferred. **This requirement is now captured in a new story, Story 3.6: TTL-based Automated Deletion.** The implementation of a periodic background job (e.g., using `rq-scheduler`) will be handled in that story.
 - **Clarification:** The tech spec mentions `documents.summary` as a text field. The "Reader" agent prompt asks for a "list of 5 key concepts" as well.
   - *Recommendation:* Store the result as structured JSON in the `summary` field (if using JSONB) or add a separate `key_concepts` column (JSONB or Text array) to the `documents` table to make it easier to display effectively on the frontend.
 - **Clarification:** The "Stateful Orchestrator" concept from `docs/architecture.md` is mentioned as "Future Vision" in the tech spec, but the tech spec focuses on a "Single-Shot" agent. This is acceptable for the MVP but should be explicitly noted as a simplification for this Epic.
