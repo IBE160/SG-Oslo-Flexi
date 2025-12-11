@@ -5,7 +5,6 @@ from app.models.user import User
 from app.core.security import get_password_hash
 import uuid
 from unittest.mock import AsyncMock, patch
-import os
 
 # Helper to create a user and get auth headers
 async def create_user_and_get_token(adb: AsyncSession, client: AsyncClient) -> dict:

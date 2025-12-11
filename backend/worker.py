@@ -6,7 +6,6 @@ from app.services.ocr_service import OCRService
 from app.models.document import DocumentStatus, Document
 from app.core.config import settings
 from redis import Redis
-from rq import Queue
 from sqlalchemy import select
 
 # Setup Redis connection for RQ

@@ -2,7 +2,6 @@ from typing import Optional
 from redis import Redis
 from rq import Queue
 from app.schemas.orchestrator import ConversationContext, WorkflowState
-from app.workers.tasks import process_ocr_task
 from app.services.reader_agent import ReaderAgent
 
 class Orchestrator:

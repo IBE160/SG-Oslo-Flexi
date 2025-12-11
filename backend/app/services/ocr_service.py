@@ -1,9 +1,7 @@
-import os
 import pypdf
 import io
 from docx import Document as DocxDocument
 from google.cloud import vision
-from app.core.config import settings
 
 class OCRService:
     @staticmethod

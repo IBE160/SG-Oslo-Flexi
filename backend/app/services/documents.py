@@ -1,5 +1,4 @@
 from typing import List
-import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.document import Document, DocumentStatus
