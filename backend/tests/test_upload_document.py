@@ -81,9 +81,9 @@ async def test_upload_file_too_large(client: AsyncClient, adb: AsyncSession):
     ("test.docx", b"PK\x03\x04", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
     ("test.txt", b"Just some text", "text/plain")
 ])
-@patch("app.api.documents.magic.from_buffer")
-async def test_upload_docx_and_txt_success(mock_magic, client: AsyncClient, adb: AsyncSession, filename, content, mime):
-    mock_magic.return_value = mime
+@patch("app.api.documents.magic")
+async def test_upload_docx_and_txt_success(mock_magic_module, client: AsyncClient, adb: AsyncSession, filename, content, mime):
+    mock_magic_module.from_buffer.return_value = mime
     headers, _ = await create_user_and_get_token(adb, client)
     files = {"file": (filename, content, mime)}
     
