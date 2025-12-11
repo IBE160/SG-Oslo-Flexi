@@ -1,6 +1,10 @@
 from typing import List
 import uuid
-import magic
+try:
+    import magic  # type: ignore[import-untyped]
+except ImportError:
+    magic = None  # type: ignore[assignment]
+
 import os
 from fastapi import APIRouter, Depends, status, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -43,7 +47,12 @@ async def upload_document(
     
     # 2. Validate MIME Type
     try:
-        mime = magic.from_buffer(header, mime=True)
+        if magic is not None:
+    detected_mime = magic.from_buffer(content, mime=True)
+else:
+    # Fallback: trust the uploaded content_type or use a safe default
+    detected_mime = upload_file.content_type or "application/octet-stream"
+
     except Exception as e:
         # Fallback if magic fails or DLL missing (common on Windows without bin)
         # We rely on Content-Type header as fallback, but warn
