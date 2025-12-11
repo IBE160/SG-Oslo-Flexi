@@ -46,13 +46,14 @@ async def upload_document(
     await file.seek(0)
     
     # 2. Validate MIME Type
+    mime = ""
     try:
         if magic is not None:
-    detected_mime = magic.from_buffer(content, mime=True)
-else:
-    # Fallback: trust the uploaded content_type or use a safe default
-    detected_mime = upload_file.content_type or "application/octet-stream"
-
+            # Use the header read earlier
+            mime = magic.from_buffer(header, mime=True)
+        else:
+            # Fallback: trust the uploaded content_type or use a safe default
+            mime = file.content_type or "application/octet-stream"
     except Exception as e:
         # Fallback if magic fails or DLL missing (common on Windows without bin)
         # We rely on Content-Type header as fallback, but warn
