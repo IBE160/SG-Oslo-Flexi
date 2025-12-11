@@ -18,30 +18,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
 from app.main import app
-from app.db.session import AsyncSessionLocal, engine
+from app.db.session import AsyncSessionLocal, engine, get_db
 from app.db import base
 from app.models.user import User  # noqa: F401 - Import User model to register it with Base metadata
-
-
-# ---------------------
-# DATABASE OVERRIDES
-# ---------------------
-
-@pytest.fixture(scope="session", autouse=True)
-def apply_db_override():
-    """
-    Override FastAPI's `get_db` dependency so the app uses the test database.
-    """
-    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
-        async with AsyncSessionLocal() as session:
-            yield session
-
-    app.dependency_overrides.clear()
-    from app.db.session import get_db
-    app.dependency_overrides[get_db] = override_get_db
-
-    yield
-    app.dependency_overrides.clear()
 
 
 # ---------------------
@@ -69,10 +48,18 @@ async def setup_db():
 @pytest_asyncio.fixture
 async def adb() -> AsyncGenerator[AsyncSession, None]:
     """
-    Async DB session for async tests.
+    Async DB session for async tests, with dependency override.
     """
     async with AsyncSessionLocal() as session:
+        
+        async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+            yield session
+
+        app.dependency_overrides[get_db] = override_get_db
+        
         yield session
+        
+        app.dependency_overrides.clear()
 
 
 # ---------------------

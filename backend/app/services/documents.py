@@ -1,10 +1,15 @@
 from typing import List
+import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.document import Document, DocumentStatus
 from app.schemas.document import DocumentCreate
 from uuid import UUID
+from fastapi import HTTPException, status
+from app.services.storage import StorageService
+import os
 
+storage_service = StorageService()
 class DocumentService:
     @staticmethod
     async def create_document_record(
@@ -50,3 +55,26 @@ class DocumentService:
         await db.commit()
         await db.refresh(doc)
         return doc
+    
+    @staticmethod
+    async def delete_document(db: AsyncSession, document_id: UUID, user_id: UUID):
+        # 1. Fetch the document
+        doc = await db.get(Document, document_id)
+
+        # 2. Check existence and ownership
+        if not doc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        if doc.user_id != user_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this document")
+
+        # 3. Delete the physical file
+        try:
+            if doc.file_path and os.path.exists(doc.file_path):
+                storage_service.delete_file(doc.file_path)
+        except Exception as e:
+            # Log the error but proceed to delete the DB record
+            print(f"Error deleting file {doc.file_path}: {e}")
+
+        # 4. Delete the database record
+        await db.delete(doc)
+        await db.commit()

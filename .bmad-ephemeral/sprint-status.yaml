@@ -57,7 +57,7 @@ development_status:
   3-2-ocr-for-scanned-documents: done
   3-3-reader-agent-analysis: done
   3-4-secure-temporary-storage: backlog
-  3-5-document-content-deletion: backlog
+  3-5-document-content-deletion: ready-for-dev
   epic-3-retrospective: optional
 
   epic-4: backlog

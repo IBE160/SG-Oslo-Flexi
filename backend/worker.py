@@ -1,11 +1,13 @@
 import asyncio
+from datetime import datetime, timedelta
 from app.db.session import AsyncSessionLocal
 from app.services.documents import DocumentService
 from app.services.ocr_service import OCRService
-from app.models.document import DocumentStatus
+from app.models.document import DocumentStatus, Document
 from app.core.config import settings
 from redis import Redis
 from rq import Queue
+from sqlalchemy import select
 
 # Setup Redis connection for RQ
 redis_conn = Redis.from_url(settings.REDIS_URL)
@@ -43,3 +45,44 @@ def process_document(document_id: str):
     RQ Task Entry Point (Synchronous wrapper for async code).
     """
     asyncio.run(process_document_async(document_id))
+
+async def cleanup_old_documents_async():
+    """
+    Async implementation of the cleanup logic for old documents.
+    """
+    print("Starting cleanup of old documents...")
+    async with AsyncSessionLocal() as db:
+        # Define the TTL (e.g., 30 days)
+        ttl_limit = datetime.utcnow() - timedelta(days=30)
+        
+        # Find old documents
+        result = await db.execute(
+            select(Document).where(Document.created_at < ttl_limit)
+        )
+        old_documents = result.scalars().all()
+        
+        if not old_documents:
+            print("No old documents to clean up.")
+            return
+
+        print(f"Found {len(old_documents)} old documents to delete.")
+        
+        # Delete each old document
+        for doc in old_documents:
+            try:
+                print(f"Deleting document {doc.id} (owner: {doc.user_id})...")
+                # Note: The user_id is passed to enforce ownership checks if any,
+                # but for a system cleanup task, we might have different rules.
+                # Assuming the service method can handle system-level deletions.
+                await DocumentService.delete_document(db, doc.id, doc.user_id)
+                print(f"Successfully deleted document {doc.id}.")
+            except Exception as e:
+                print(f"Failed to delete document {doc.id}: {e}")
+    
+    print("Finished cleanup of old documents.")
+
+def cleanup_old_documents():
+    """
+    RQ Task Entry Point for cleaning up old documents.
+    """
+    asyncio.run(cleanup_old_documents_async())

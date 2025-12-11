@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { Document } from '@/types/document';
-import { FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, CheckCircle, AlertCircle, Loader2, Trash2 } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -26,6 +26,23 @@ export function DocumentList({ refreshTrigger }: { refreshTrigger: number }) {
       setLoading(false);
     }
   }, [session?.accessToken]);
+
+  const handleDelete = async (documentId: string) => {
+    if (!session?.accessToken) return;
+    if (!window.confirm("Are you sure you want to delete this document? This action cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`${API_URL}/api/v1/documents/${documentId}`, {
+        headers: { Authorization: `Bearer ${session.accessToken}` },
+      });
+      fetchDocuments(); // Re-fetch documents to update the list
+    } catch (error) {
+      console.error('Failed to delete document', error);
+      alert("Failed to delete document. Please try again.");
+    }
+  };
 
   useEffect(() => {
     fetchDocuments();
@@ -62,8 +79,15 @@ export function DocumentList({ refreshTrigger }: { refreshTrigger: number }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <StatusBadge status={doc.status} />
+            <button 
+              onClick={() => handleDelete(doc.id)}
+              className="p-1 text-gray-400 hover:text-red-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              aria-label="Delete document"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
       ))}

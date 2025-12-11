@@ -96,3 +96,15 @@ async def upload_document(
         # We don't fail the request, but log it. The user can retry or we have a retry mechanism.
     
     return doc
+
+@router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_document(
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Delete a document and its related data.
+    """
+    await DocumentService.delete_document(db, document_id, current_user.id)
+    return None  # No content to return
