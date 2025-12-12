@@ -1,6 +1,17 @@
 import Image from "next/image";
+import { SummaryDisplay } from "@/components/SummaryDisplay";
+import { FlashcardDisplay } from "@/components/FlashcardDisplay";
+import { QuizDisplay } from "@/components/QuizDisplay";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [sessionId, setSessionId] = useState("");
+
+  useEffect(() => {
+    // In a real app, you'd get this from a session context or API call
+    setSessionId(Math.random().toString(36).substring(7));
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -34,6 +45,9 @@ export default function Home() {
             center.
           </p>
         </div>
+        {sessionId && <SummaryDisplay sessionId={sessionId} />}
+        {sessionId && <FlashcardDisplay sessionId={sessionId} />}
+        {sessionId && <QuizDisplay sessionId={sessionId} />}
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"

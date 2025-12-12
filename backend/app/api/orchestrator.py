@@ -79,3 +79,33 @@ def get_workflow_status(session_id: str, orchestrator: Orchestrator = Depends(ge
     if not context:
         raise HTTPException(status_code=404, detail="Session not found")
     return context
+
+@router.post("/{session_id}/summarize", response_model=ConversationContext)
+def summarize_document(session_id: str, orchestrator: Orchestrator = Depends(get_orchestrator)):
+    """
+    Request a summary for the document in the workflow session.
+    """
+    context = orchestrator.request_summary(session_id)
+    if not context:
+        raise HTTPException(status_code=404, detail="Session not found or not in a valid state for summarization.")
+    return context
+
+@router.post("/{session_id}/flashcards", response_model=ConversationContext)
+def flashcards_document(session_id: str, orchestrator: Orchestrator = Depends(get_orchestrator)):
+    """
+    Request flashcards for the document in the workflow session.
+    """
+    context = orchestrator.request_flashcards(session_id)
+    if not context:
+        raise HTTPException(status_code=404, detail="Session not found or not in a valid state for flashcard generation.")
+    return context
+
+@router.post("/{session_id}/quiz", response_model=ConversationContext)
+def quiz_document(session_id: str, orchestrator: Orchestrator = Depends(get_orchestrator)):
+    """
+    Request a quiz for the document in the workflow session.
+    """
+    context = orchestrator.request_quiz(session_id)
+    if not context:
+        raise HTTPException(status_code=404, detail="Session not found or not in a valid state for quiz generation.")
+    return context

@@ -3,6 +3,7 @@ from redis import Redis
 from rq import Queue
 from app.schemas.orchestrator import ConversationContext, WorkflowState
 from app.services.reader_agent import ReaderAgent
+from app.services.coach_agent import CoachAgent
 
 class Orchestrator:
     def __init__(self, redis_client: Redis):
@@ -10,6 +11,7 @@ class Orchestrator:
         self.queue = Queue(connection=redis_client)
         # Placeholder for the agent
         self.reader_agent = ReaderAgent()
+        self.coach_agent = CoachAgent()
 
     def load_context(self, session_id: str) -> Optional[ConversationContext]:
         # TODO: Re-enable Redis connection once it's available in the test environment.
@@ -46,6 +48,30 @@ class Orchestrator:
         self.trigger_next_step(context)
         return context
 
+    def request_summary(self, session_id: str) -> Optional[ConversationContext]:
+        context = self.load_context(session_id)
+        if context and context.state == WorkflowState.ANALYZED:
+            self.update_state_internal_only(context, WorkflowState.SUMMARIZING)
+            self.trigger_next_step(context)
+            return context
+        return None
+
+    def request_flashcards(self, session_id: str) -> Optional[ConversationContext]:
+        context = self.load_context(session_id)
+        if context and context.state == WorkflowState.ANALYZED:
+            self.update_state_internal_only(context, WorkflowState.GENERATING_FLASHCARDS)
+            self.trigger_next_step(context)
+            return context
+        return None
+
+    def request_quiz(self, session_id: str) -> Optional[ConversationContext]:
+        context = self.load_context(session_id)
+        if context and context.state == WorkflowState.ANALYZED:
+            self.update_state_internal_only(context, WorkflowState.GENERATING_QUIZ)
+            self.trigger_next_step(context)
+            return context
+        return None
+
     def trigger_next_step(self, context: ConversationContext):
         """
         Decides the next action based on the current state.
@@ -65,6 +91,24 @@ class Orchestrator:
             updated_context = self.reader_agent.process(context)
             self.save_context(updated_context)
             self.update_state_internal_only(updated_context, WorkflowState.ANALYZED)
+
+        elif context.state == WorkflowState.SUMMARIZING:
+            # After analysis, generate a summary
+            updated_context = self.coach_agent.process(context, "generate_summary")
+            self.save_context(updated_context)
+            self.update_state_internal_only(updated_context, WorkflowState.COMPLETED)
+
+        elif context.state == WorkflowState.GENERATING_FLASHCARDS:
+            # After analysis, generate flashcards
+            updated_context = self.coach_agent.process(context, "generate_flashcards")
+            self.save_context(updated_context)
+            self.update_state_internal_only(updated_context, WorkflowState.COMPLETED)
+
+        elif context.state == WorkflowState.GENERATING_QUIZ:
+            # After analysis, generate a quiz
+            updated_context = self.coach_agent.process(context, "generate_quiz")
+            self.save_context(updated_context)
+            self.update_state_internal_only(updated_context, WorkflowState.COMPLETED)
 
         elif context.state == WorkflowState.ANALYZED:
             # Maybe trigger a final completion step or notification

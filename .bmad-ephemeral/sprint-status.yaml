@@ -60,10 +60,10 @@ development_status:
   3-6-ttl-based-automated-deletion: backlog
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-summary-generation: backlog
-  4-2-flashcard-generation: backlog
-  4-3-quiz-generation: backlog
+  epic-4: contexted
+  4-1-summary-generation: done
+  4-2-flashcard-generation: done
+  4-3-quiz-generation: done
   epic-4-retrospective: optional
 
   epic-5: backlog
