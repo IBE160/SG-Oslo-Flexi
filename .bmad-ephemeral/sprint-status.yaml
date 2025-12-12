@@ -64,7 +64,7 @@ development_status:
   4-1-summary-generation: done
   4-2-flashcard-generation: done
   4-3-quiz-generation: done
-  epic-4-retrospective: optional
+  epic-4-retrospective: completed
 
   epic-5: backlog
   5-1-flashcard-review: backlog
