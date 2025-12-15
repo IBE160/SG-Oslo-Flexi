@@ -8,3 +8,4 @@ backend/tests/__pycache__/
 backend/dev.db
 backend/test.db
 test.db
+test-results/
