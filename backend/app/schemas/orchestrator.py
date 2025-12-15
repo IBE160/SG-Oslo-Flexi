@@ -9,6 +9,9 @@ class WorkflowState(str, Enum):
     OCR_COMPLETED = "ocr_completed"
     ANALYZING = "analyzing"
     ANALYZED = "analyzed"
+    SUMMARIZING = "summarizing"
+    GENERATING_FLASHCARDS = "generating_flashcards"
+    GENERATING_QUIZ = "generating_quiz"
     COMPLETED = "completed"
     FAILED = "failed"
 
