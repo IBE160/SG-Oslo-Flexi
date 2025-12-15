@@ -1,34 +1,24 @@
 import pytest
-from redis import Redis
-from rq_scheduler import Scheduler
-from app.core.config import settings
+import worker
 from worker import schedule_jobs
 
-@pytest.fixture
-def scheduler():
-    """
-    Provides a scheduler instance with a clean Redis connection.
-    """
-    redis_conn = Redis.from_url(settings.REDIS_URL)
-    # Clear any existing schedules
-    redis_conn.delete("rq:scheduler:scheduled_jobs")
-    return Scheduler(connection=redis_conn)
-
-def test_schedule_cleanup_job(scheduler: Scheduler):
+def test_schedule_cleanup_job(mocker):
     """
     Tests that the cleanup_old_documents job is scheduled correctly.
     """
-    # Schedule the jobs
+    # Mock the scheduler instance in the worker module
+    mock_scheduler = mocker.patch('worker.scheduler')
+    
+    # Run the function
     schedule_jobs()
 
-    # Get the scheduled jobs
-    jobs = scheduler.get_jobs()
-
-    # Check that there is one scheduled job
-    assert len(jobs) == 1
-
-    # Check that the scheduled job is the cleanup job
-    job = jobs[0]
-    # The function is in the 'worker' module, so the name should be 'worker.cleanup_old_documents'
-    assert job.func_name == "worker.cleanup_old_documents"
-    assert job.meta["interval"] == 60 * 60 * 24
+    # Verify schedule was called
+    assert mock_scheduler.schedule.call_count == 1
+    
+    # Get the arguments passed to schedule
+    # schedule is called with keyword arguments in worker.py
+    call_kwargs = mock_scheduler.schedule.call_args.kwargs
+    
+    # Verify the arguments
+    assert call_kwargs['func'] == worker.cleanup_old_documents
+    assert call_kwargs['interval'] == 60 * 60 * 24
