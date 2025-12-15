@@ -2,15 +2,10 @@ import Image from "next/image";
 import { SummaryDisplay } from "@/components/SummaryDisplay";
 import { FlashcardDisplay } from "@/components/FlashcardDisplay";
 import { QuizDisplay } from "@/components/QuizDisplay";
-import { useEffect, useState } from "react";
+import { useState } from 'react';
 
 export default function Home() {
-  const [sessionId, setSessionId] = useState("");
-
-  useEffect(() => {
-    // In a real app, you'd get this from a session context or API call
-    setSessionId(Math.random().toString(36).substring(7));
-  }, []);
+  const [sessionId] = useState(() => Math.random().toString(36).substring(7));
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
