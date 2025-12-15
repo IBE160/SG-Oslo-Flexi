@@ -7,9 +7,23 @@ from app.models.document import DocumentStatus, Document
 from app.core.config import settings
 from redis import Redis
 from sqlalchemy import select
+from rq_scheduler import Scheduler
 
 # Setup Redis connection for RQ
 redis_conn = Redis.from_url(settings.REDIS_URL)
+scheduler = Scheduler(connection=redis_conn)
+
+def schedule_jobs():
+    """
+    Schedules the periodic jobs.
+    """
+    # Schedule the cleanup job to run daily
+    scheduler.schedule(
+        scheduled_time=datetime.utcnow(),
+        func=cleanup_old_documents,
+        interval=60 * 60 * 24,  # daily
+        repeat=None # repeat indefinitely
+    )
 
 async def process_document_async(document_id: str):
     """
@@ -85,3 +99,6 @@ def cleanup_old_documents():
     RQ Task Entry Point for cleaning up old documents.
     """
     asyncio.run(cleanup_old_documents_async())
+
+if __name__ == "__main__":
+    schedule_jobs()

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { SummaryDisplay } from "@/components/SummaryDisplay";
 import { FlashcardDisplay } from "@/components/FlashcardDisplay";

@@ -14,6 +14,8 @@ from app.models.user import User
 from app.services.storage import StorageService
 from app.services.documents import DocumentService
 from app.schemas.document import DocumentCreate, DocumentResponse
+from app.schemas.flashcard import FlashcardResponse
+from app.schemas.quiz import QuizResponse
 from app.core.config import settings
 from rq import Queue
 from redis import Redis
@@ -118,3 +120,31 @@ async def delete_document(
     """
     await DocumentService.delete_document(db, document_id, current_user.id)
     return None  # No content to return
+
+@router.get("/{document_id}/flashcards", response_model=List[FlashcardResponse])
+async def get_document_flashcards(
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Retrieve all flashcards for a specific document.
+    """
+    flashcards = await DocumentService.get_document_flashcards(db, document_id, current_user.id)
+    if flashcards is None:
+        raise HTTPException(status_code=404, detail="Flashcards not found for this document")
+    return flashcards
+
+@router.get("/{document_id}/quiz", response_model=QuizResponse)
+async def get_document_quiz(
+    document_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Retrieve the quiz for a specific document.
+    """
+    quiz = await DocumentService.get_document_quiz(db, document_id, current_user.id)
+    if quiz is None:
+        raise HTTPException(status_code=404, detail="Quiz not found for this document")
+    return quiz

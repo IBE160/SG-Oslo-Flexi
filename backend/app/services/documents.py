@@ -77,3 +77,61 @@ class DocumentService:
         # 4. Delete the database record
         await db.delete(doc)
         await db.commit()
+
+    @staticmethod
+    async def get_document_flashcards(db: AsyncSession, document_id: UUID, user_id: UUID) -> List:
+        # 1. Fetch the document and its flashcards
+        doc = await db.get(Document, document_id)
+
+        # 2. Check existence and ownership
+        if not doc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        if doc.user_id != user_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to access this document")
+
+        # 3. Return the flashcards
+        return doc.flashcards
+
+    @staticmethod
+    async def get_document_quiz(db: AsyncSession, document_id: UUID, user_id: UUID):
+        # 1. Fetch the document and its quiz
+        doc = await db.get(Document, document_id)
+
+        # 2. Check existence and ownership
+        if not doc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
+        if doc.user_id != user_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to access this document")
+
+        # 3. Return the quiz
+        return doc.quiz
+
+    @staticmethod
+    async def delete_old_documents(db: AsyncSession, days: int):
+        from datetime import datetime, timedelta
+
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        
+        # Find documents older than the cutoff date
+        result = await db.execute(
+            select(Document).where(Document.created_at < cutoff_date)
+        )
+        documents_to_delete = result.scalars().all()
+
+        for doc in documents_to_delete:
+            # 1. Delete the physical file from storage
+            try:
+                if doc.file_path and os.path.exists(doc.file_path):
+                    storage_service.delete_file(doc.file_path)
+            except Exception as e:
+                # Log the error but proceed to delete the DB record
+                print(f"Error deleting file {doc.file_path}: {e}")
+
+            # 2. Delete the database record (cascades to flashcards, etc.)
+            await db.delete(doc)
+        
+        if documents_to_delete:
+            await db.commit()
+            print(f"Successfully deleted {len(documents_to_delete)} old document(s).")
+        else:
+            print("No old documents to delete.")

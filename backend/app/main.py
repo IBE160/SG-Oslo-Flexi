@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api import health, queue, orchestrator, users, auth, documents, agents
+from app.api import health, queue, orchestrator, users, auth, documents, agents, quizzes
 
 app = FastAPI(title=settings.PROJECT_NAME)
 origins = [
@@ -24,6 +24,7 @@ app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
 app.include_router(documents.router, prefix="/api/v1/documents", tags=["documents"])
 app.include_router(agents.router, prefix="/api/v1/agents", tags=["agents"])
+app.include_router(quizzes.router, prefix="/api/v1/quizzes", tags=["quizzes"])
 
 @app.get("/")
 def read_root():

@@ -75,8 +75,17 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 3.3: "Reader" Agent Analysis
   - [x] Story 3.4: Secure Temporary Storage
   - [x] Story 3.5: Manual Document & Content Deletion
-  - [ ] Story 3.6: TTL-based Automated Deletion
+  - [x] Story 3.6: TTL-based Automated Deletion
 - [x] Epic 4: AI-Powered Content Generation
   - [x] Story 4.1: Summary Generation
   - [x] Story 4.2: Flashcard Generation
   - [x] Story 4.3: Quiz Generation
+- [x] Epic 5: Learning & Assessment
+  - [x] Story 5.1: Flashcard Review
+  - [x] Story 5.2: Quiz Interface
+  - [x] Story 5.3: Quiz Results
+- [ ] Epic 6: Basic Progress Tracking
+  - [ ] Story 6.1: Quiz History
+  - [ ] Story 6.2: Basic Progress Dashboard
+- [ ] Epic 7: Quality Assurance & UX Excellence
+  - [ ] Story 7.1: Accessibility Compliance (WCAG 2.1 AA)
