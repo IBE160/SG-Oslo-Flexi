@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<story-context id="story-3.6" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>6</storyId>
+    <title>TTL-based Automated Deletion</title>
+    <status>ready_for_dev</status>
+    <generatedAt>2025-12-15</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/story-3.6-ttl-based-automated-deletion.md</sourceStoryPath>
+  </metadata>
+  <story>
+    <asA>system administrator</asA>
+    <iWant>documents and generated content to be deleted automatically after a set time (TTL)</iWant>
+    <soThat>system storage is kept clean, costs are managed, and user data is not retained indefinitely</soThat>
+    <tasks>
+- [ ] **Backend Service Refactoring:**
+    - [ ] Refactor `DocumentService.delete_document` to separate authorization logic from the core deletion mechanics.
+    - [ ] Create a reusable internal method (e.g., `_perform_document_deletion`) that handles file system removal and DB record deletion.
+    - [ ] Update `delete_document` to verify user ownership first, then call `_perform_document_deletion`.
+    - [ ] Update `delete_old_documents` to:
+        - [ ] Accept a `ttl_hours` parameter (or read from config).
+        - [ ] Query for expired documents.
+        - [ ] Iterate and call `_perform_document_deletion` for each.
+        - [ ] Log success/failure counts (AC #1, #4).
+- [ ] **Configuration:**
+    - [ ] Add `DOCUMENT_TTL_HOURS` to `app/core/config.py` (read from env, default 24).
+- [ ] **Scheduler Implementation:**
+    - [ ] Update `backend/scheduler.py` to:
+        - [ ] Load the `DOCUMENT_TTL_HOURS` config.
+        - [ ] Run the job at the defined interval.
+        - [ ] Ensure it handles async DB sessions correctly.
+- [ ] **Testing:**
+    - [ ] **Unit Test:** Verify `delete_old_documents` correctly identifies expired vs. non-expired documents (mocking time).
+    - [ ] **Unit Test:** Verify `_perform_document_deletion` handles missing files gracefully (Scenario 4).
+    - [ ] **Integration Test:** Simulate a scheduler run and verify the database and file system are cleaned up.
+    </tasks>
+  </story>
+  <acceptanceCriteria>
+1.  **Given** a document older than `DOCUMENT_TTL_HOURS`, **When** the job runs, **Then** it is deleted from DB and Disk.
+2.  **Given** a document newer than `DOCUMENT_TTL_HOURS`, **When** the job runs, **Then** it is NOT deleted.
+3.  **Given** an expired document with missing physical file, **When** the job runs, **Then** the DB record is still deleted (no crash).
+4.  **Given** multiple expired documents, **When** the job runs, **Then** all are deleted and the count is logged.
+  </acceptanceCriteria>
+  <artifacts>
+    <docs>
+        <doc>
+            <path>docs/epics.md</path>
+            <title>Epic 3: Document Processing &amp; Analysis</title>
+            <section>Story 3.6: TTL-based Automated Deletion</section>
+        </doc>
+        <doc>
+            <path>docs/PRD.md</path>
+            <title>Product Requirements Document</title>
+            <section>7.2. Document Management</section>
+            <snippet>FR2.4: The system SHALL delete uploaded documents... after a defined TTL.</snippet>
+        </doc>
+    </docs>
+    <code>
+      <file>
+        <path>backend/app/services/documents.py</path>
+        <kind>service</kind>
+        <symbol>DocumentService</symbol>
+        <reason>Contains existing `delete_document` (user-facing) and `delete_old_documents` (admin-facing, currently broken/duplicated). Needs refactoring for DRY.</reason>
+      </file>
+      <file>
+        <path>backend/scheduler.py</path>
+        <kind>worker</kind>
+        <symbol>delete_old_documents_job</symbol>
+        <reason>Entry point for the scheduled task. Needs to use the refactored service and config.</reason>
+      </file>
+      <file>
+        <path>backend/app/core/config.py</path>
+        <kind>config</kind>
+        <symbol>Settings</symbol>
+        <reason>Needs new `DOCUMENT_TTL_HOURS` field.</reason>
+      </file>
+    </code>
+    <dependencies>
+        <ecosystem name="Python">
+            <dependency>rq-scheduler</dependency>
+            <dependency>sqlalchemy</dependency>
+            <dependency>fastapi</dependency>
+        </ecosystem>
+    </dependencies>
+  </artifacts>
+  <constraints>
+    <constraint>Must strictly reuse deletion logic (DRY principle) to avoid inconsistent states.</constraint>
+    <constraint>Must handle "file not found" errors gracefully during deletion to ensure DB is cleaned up.</constraint>
+    <constraint>Logging must be sufficient to audit the number of deleted files.</constraint>
+  </constraints>
+  <tests>
+    <locations>
+        - backend/tests/services/test_document_service.py
+    </locations>
+    <ideas>
+        - Mock `datetime.utcnow` to simulate documents aging past the TTL.
+        - Create a temporary file, create a DB record, run the deletion, assert both are gone.
+        - Create a DB record *without* a file, run deletion, assert DB record is gone and no exception raised.
+    </ideas>
+  </tests>
+</story-context>

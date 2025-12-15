@@ -6,9 +6,11 @@ from app.schemas.document import DocumentCreate
 from uuid import UUID
 from fastapi import HTTPException, status
 from app.services.storage import StorageService
+from datetime import datetime, timedelta
 import os
 
 storage_service = StorageService()
+
 class DocumentService:
     @staticmethod
     async def create_document_record(
@@ -54,6 +56,26 @@ class DocumentService:
         await db.commit()
         await db.refresh(doc)
         return doc
+
+    @staticmethod
+    async def _perform_document_deletion(db: AsyncSession, doc: Document) -> bool:
+        """
+        Internal method to delete a document and its file.
+        Returns True if successful (or if file was missing but DB record deleted), False on critical error.
+        This method handles exceptions internally for file deletion to ensuring DB cleanup proceeds.
+        """
+        # 1. Delete the physical file from storage
+        try:
+            if doc.file_path and os.path.exists(doc.file_path):
+                storage_service.delete_file(doc.file_path)
+        except Exception as e:
+            # Log the error but proceed to delete the DB record
+            print(f"Error deleting file {doc.file_path}: {e}")
+
+        # 2. Delete the database record (cascades to flashcards, etc.)
+        await db.delete(doc)
+        # Note: Caller is responsible for commit() to allow batching or transaction control
+        return True
     
     @staticmethod
     async def delete_document(db: AsyncSession, document_id: UUID, user_id: UUID):
@@ -66,16 +88,8 @@ class DocumentService:
         if doc.user_id != user_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this document")
 
-        # 3. Delete the physical file
-        try:
-            if doc.file_path and os.path.exists(doc.file_path):
-                storage_service.delete_file(doc.file_path)
-        except Exception as e:
-            # Log the error but proceed to delete the DB record
-            print(f"Error deleting file {doc.file_path}: {e}")
-
-        # 4. Delete the database record
-        await db.delete(doc)
+        # 3. Perform deletion using shared logic
+        await DocumentService._perform_document_deletion(db, doc)
         await db.commit()
 
     @staticmethod
@@ -107,31 +121,27 @@ class DocumentService:
         return doc.quiz
 
     @staticmethod
-    async def delete_old_documents(db: AsyncSession, days: int):
-        from datetime import datetime, timedelta
-
-        cutoff_date = datetime.utcnow() - timedelta(days=days)
+    async def delete_old_documents(db: AsyncSession, ttl_hours: int = 24) -> int:
+        """
+        Deletes documents older than the specified TTL in hours.
+        """
+        cutoff_date = datetime.utcnow() - timedelta(hours=ttl_hours)
         
         # Find documents older than the cutoff date
         result = await db.execute(
             select(Document).where(Document.created_at < cutoff_date)
         )
         documents_to_delete = result.scalars().all()
-
-        for doc in documents_to_delete:
-            # 1. Delete the physical file from storage
-            try:
-                if doc.file_path and os.path.exists(doc.file_path):
-                    storage_service.delete_file(doc.file_path)
-            except Exception as e:
-                # Log the error but proceed to delete the DB record
-                print(f"Error deleting file {doc.file_path}: {e}")
-
-            # 2. Delete the database record (cascades to flashcards, etc.)
-            await db.delete(doc)
         
-        if documents_to_delete:
+        count = 0
+        for doc in documents_to_delete:
+            await DocumentService._perform_document_deletion(db, doc)
+            count += 1
+        
+        if count > 0:
             await db.commit()
-            print(f"Successfully deleted {len(documents_to_delete)} old document(s).")
+            print(f"Successfully deleted {count} old document(s).")
         else:
             print("No old documents to delete.")
+            
+        return count

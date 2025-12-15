@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     
     # Storage
     UPLOAD_DIR: str = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploaded_docs")
+    DOCUMENT_TTL_HOURS: int = 24
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
 

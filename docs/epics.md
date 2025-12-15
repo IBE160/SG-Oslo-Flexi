@@ -154,7 +154,7 @@
     *   And the API SHALL respond with 204 No Content upon successful deletion.
     *   And the system SHALL prevent a user from deleting documents they do not own.
 
-**Story 3.6: TTL-based Automated Deletion**
+**Story 3.6: TTL-based Automated Deletion** (Status: Done)
 
 *   **As a system administrator,** I want documents and generated content to be deleted automatically after a set time, so that system storage is kept clean and data is not retained indefinitely.
 *   **Acceptance Criteria:**
