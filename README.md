@@ -29,3 +29,21 @@ Repository for SG-Oslo-Flexi - IBE160 Programmering med KI.
    ```bash
    poetry install
    ```
+
+## Development Workflow
+
+### Accessibility Testing (WCAG 2.1 AA)
+We use `axe-core` via Playwright to ensure our UI is accessible.
+
+**To run accessibility tests locally:**
+```bash
+# Runs the full e2e suite including accessibility checks
+npm run test:e2e
+```
+
+**What to expect:**
+- The test suite scans key pages (Landing, Login, Register) for violations.
+- A "Pass" means 0 critical or serious WCAG 2.1 AA violations.
+- These tests run automatically in CI on every Push/PR.
+
+**Note:** The *Dashboard* accessibility test is currently skipped in the automated suite due to test environment limitations (requires running backend), but the code is implemented for compliance.

@@ -56,19 +56,21 @@ export const FlashcardDisplay = ({ sessionId }: FlashcardDisplayProps) => {
       <button 
         onClick={handleGenerateFlashcards} 
         disabled={isLoading}
-        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+        className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
       >
         {isLoading ? "Generating..." : "Generate Flashcards"}
       </button>
       {error && <p className="mt-2 text-red-500">{error}</p>}
       {flashcards.length > 0 && (
         <div className="mt-4">
-          <div 
-            className="flex items-center justify-center p-8 border rounded-md h-64 cursor-pointer"
+          <button 
+            type="button"
+            className="flex items-center justify-center w-full p-8 border rounded-md h-64 cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors"
             onClick={() => setIsFlipped(!isFlipped)}
+            aria-label={isFlipped ? "Answer: " + flashcards[currentCard].answer : "Question: " + flashcards[currentCard].question}
           >
-            <p>{isFlipped ? flashcards[currentCard].answer : flashcards[currentCard].question}</p>
-          </div>
+            <p className="text-xl text-center">{isFlipped ? flashcards[currentCard].answer : flashcards[currentCard].question}</p>
+          </button>
           <div className="flex justify-between mt-4">
             <button onClick={handlePrevCard} disabled={currentCard === 0}>Previous</button>
             <p>{currentCard + 1} / {flashcards.length}</p>

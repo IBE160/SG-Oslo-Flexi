@@ -89,82 +89,84 @@ export function FileUpload({ onUploadSuccess }: { onUploadSuccess?: () => void }
       {!file && !success && (
         <div
           {...getRootProps()}
-          className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors
+          className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600
             ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}`}
         >
           <input {...getInputProps()} />
-          <UploadCloud className="w-10 h-10 text-gray-400 mb-2" />
+          <UploadCloud className="w-10 h-10 text-gray-400 mb-2" aria-hidden="true" />
           <p className="text-sm text-gray-600">Drag & drop a file here, or click to select</p>
           <p className="text-xs text-gray-400 mt-1">PDF, DOCX, TXT (Max 20MB)</p>
         </div>
       )}
 
-      {file && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
-            <div className="flex items-center space-x-3">
-              <File className="w-6 h-6 text-blue-500" />
-              <div>
-                <p className="text-sm font-medium text-gray-700">{file.name}</p>
-                <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+      <div aria-live="polite">
+        {file && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+              <div className="flex items-center space-x-3">
+                <File className="w-6 h-6 text-blue-500" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">{file.name}</p>
+                  <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                </div>
               </div>
+              {!uploading && (
+                <button onClick={removeFile} className="text-gray-400 hover:text-red-500" aria-label="Remove file">
+                  <X className="w-5 h-5" aria-hidden="true" />
+                </button>
+              )}
             </div>
-            {!uploading && (
-              <button onClick={removeFile} className="text-gray-400 hover:text-red-500">
-                <X className="w-5 h-5" />
-              </button>
+
+            {uploading && (
+              <div className="mt-2">
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div
+                    className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-500 mt-1 text-right">{progress}%</p>
+              </div>
             )}
-          </div>
 
-          {uploading && (
-            <div className="mt-2">
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                ></div>
+            {error && (
+              <div className="flex items-center mt-2 text-red-600 text-sm">
+                <AlertCircle className="w-4 h-4 mr-1" aria-hidden="true" />
+                {error}
               </div>
-              <p className="text-xs text-gray-500 mt-1 text-right">{progress}%</p>
-            </div>
-          )}
+            )}
 
-          {error && (
-            <div className="flex items-center mt-2 text-red-600 text-sm">
-              <AlertCircle className="w-4 h-4 mr-1" />
-              {error}
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={handleUpload}
+                disabled={uploading}
+                className={`px-4 py-2 rounded-md text-white text-sm font-medium transition-colors
+                  ${uploading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+              >
+                {uploading ? 'Uploading...' : 'Upload File'}
+              </button>
             </div>
-          )}
+          </div>
+        )}
 
-          <div className="mt-4 flex justify-end">
+        {success && (
+          <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-md flex items-center justify-between">
+            <div className="flex items-center">
+              <CheckCircle className="w-5 h-5 mr-2" aria-hidden="true" />
+              <span>Upload successful!</span>
+            </div>
             <button
-              onClick={handleUpload}
-              disabled={uploading}
-              className={`px-4 py-2 rounded-md text-white text-sm font-medium transition-colors
-                ${uploading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
+              onClick={() => {
+                setSuccess(false);
+                setFile(null);
+              }}
+              className="text-sm font-medium hover:underline"
             >
-              {uploading ? 'Uploading...' : 'Upload File'}
+              Upload another
             </button>
           </div>
-        </div>
-      )}
-
-      {success && (
-        <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-md flex items-center justify-between">
-          <div className="flex items-center">
-            <CheckCircle className="w-5 h-5 mr-2" />
-            <span>Upload successful!</span>
-          </div>
-          <button
-            onClick={() => {
-              setSuccess(false);
-              setFile(null);
-            }}
-            className="text-sm font-medium hover:underline"
-          >
-            Upload another
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,22 +1,50 @@
-<testsuites id="" name="" tests="3" failures="3" skipped="0" errors="0" time="4.788737">
-<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-10T23:18:48.307Z" hostname="chromium" tests="1" failures="1" skipped="0" time="2.823" errors="0">
-<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="2.823">
+<testsuites id="" name="" tests="30" failures="12" skipped="3" errors="0" time="30.169886">
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="chromium" tests="4" failures="0" skipped="1" time="7.433" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="1.692">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="2.801">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="2.94">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="chromium" tests="2" failures="0" skipped="0" time="1.273" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="0.926">
+</testcase>
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="0.347">
+<system-out>
+<![CDATA[[Mock] Created user: Jett_Cummerata@yahoo.com
+Testing with user: Jett_Cummerata@yahoo.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="chromium" tests="1" failures="1" skipped="0" time="17.584" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="17.584">
 <failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
 <![CDATA[  [chromium] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
 
-    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/login
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
     Call log:
-      - navigating to "http://localhost:3000/login", waiting until "load"
+      - waiting for locator('input[name="email"]')
 
 
-      4 |   test('should allow a user to upload and then delete a document', async ({ page }) => {
-      5 |     // 1. Login
-    > 6 |     await page.goto('/login');
-        |                ^
-      7 |     await page.fill('input[name="email"]', 'test@example.com');
-      8 |     await page.fill('input[name="password"]', 'password');
-      9 |     await page.click('button[type="submit"]');
-        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:6:16
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\test-failed-1.png
@@ -25,6 +53,8 @@
     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
     ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\video.webm
     ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\error-context.md
 ]]>
 </failure>
 <system-out>
@@ -32,28 +62,162 @@
 [[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\test-failed-1.png]]
 
 [[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\video.webm]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-10T23:18:48.307Z" hostname="firefox" tests="1" failures="1" skipped="0" time="3.156" errors="0">
-<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="3.156">
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="chromium" tests="3" failures="3" skipped="0" time="2.226" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="0.739">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ──────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.7499.4 Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="0.811">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ─────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.7499.4 Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="0.676">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:70:7 › Document Upload › should reject file too large ────────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.7499.4 Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="firefox" tests="4" failures="0" skipped="1" time="9.996" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="3.3">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="3.272">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="3.424">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="firefox" tests="2" failures="0" skipped="0" time="4.944" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="3.141">
+</testcase>
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="1.803">
+<system-out>
+<![CDATA[[Mock] Created user: Zula_Tromp49@hotmail.com
+Testing with user: Zula_Tromp49@hotmail.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="firefox" tests="1" failures="1" skipped="0" time="17.271" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="17.271">
 <failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
 <![CDATA[  [firefox] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
 
-    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
     Call log:
-      - navigating to "http://localhost:3000/login", waiting until "load"
+      - waiting for locator('input[name="email"]')
 
 
-      4 |   test('should allow a user to upload and then delete a document', async ({ page }) => {
-      5 |     // 1. Login
-    > 6 |     await page.goto('/login');
-        |                ^
-      7 |     await page.fill('input[name="email"]', 'test@example.com');
-      8 |     await page.fill('input[name="password"]', 'password');
-      9 |     await page.click('button[type="submit"]');
-        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:6:16
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\test-failed-1.png
@@ -77,24 +241,156 @@
 </system-out>
 </testcase>
 </testsuite>
-<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-10T23:18:48.307Z" hostname="webkit" tests="1" failures="1" skipped="0" time="3.136" errors="0">
-<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="3.136">
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="firefox" tests="3" failures="3" skipped="0" time="8.026" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="2.691">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ───────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0.2) Gecko/20100101 Firefox/144.0.2
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="2.702">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ──────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0.2) Gecko/20100101 Firefox/144.0.2
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="2.633">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:70:7 › Document Upload › should reject file too large ─────────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0.2) Gecko/20100101 Firefox/144.0.2
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="webkit" tests="4" failures="0" skipped="1" time="8.105" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="2.957">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="2.782">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="2.366">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="webkit" tests="2" failures="0" skipped="0" time="1.256" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="0.753">
+</testcase>
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="0.503">
+<system-out>
+<![CDATA[[Mock] Created user: Natalie20@hotmail.com
+Testing with user: Natalie20@hotmail.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="webkit" tests="1" failures="1" skipped="0" time="16.106" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="16.106">
 <failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
 <![CDATA[  [webkit] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
 
-    Error: page.goto: Could not connect to server
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
     Call log:
-      - navigating to "http://localhost:3000/login", waiting until "load"
+      - waiting for locator('input[name="email"]')
 
 
-      4 |   test('should allow a user to upload and then delete a document', async ({ page }) => {
-      5 |     // 1. Login
-    > 6 |     await page.goto('/login');
-        |                ^
-      7 |     await page.fill('input[name="email"]', 'test@example.com');
-      8 |     await page.fill('input[name="password"]', 'password');
-      9 |     await page.click('button[type="submit"]');
-        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:6:16
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\test-failed-1.png
@@ -103,6 +399,8 @@
     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
     ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\video.webm
     ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\error-context.md
 ]]>
 </failure>
 <system-out>
@@ -110,6 +408,112 @@
 [[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\test-failed-1.png]]
 
 [[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\video.webm]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T19:48:30.739Z" hostname="webkit" tests="3" failures="3" skipped="0" time="2.672" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="0.894">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="0.803">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ───────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="0.975">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:70:7 › Document Upload › should reject file too large ──────────────────
+
+    Error: apiRequestContext.post: connect ECONNREFUSED ::1:8000
+    Call log:
+      - → POST http://localhost:8000/api/v1/users/register
+        - user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - content-type: application/json
+        - content-length: 71
+
+        at apiRequestContext.post: connect ECONNREFUSED ::1:8000
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:18:29)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\video.webm]]
 ]]>
 </system-out>
 </testcase>

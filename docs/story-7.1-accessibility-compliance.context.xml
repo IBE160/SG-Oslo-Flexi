@@ -1,0 +1,63 @@
+<story_context>
+  <story_id>7.1</story_id>
+  <story_name>Accessibility Compliance (WCAG 2.1 AA)</story_name>
+  <epic>Epic 7: Quality Assurance & UX Excellence</epic>
+  <sprint>Sprint 6</sprint>
+  <status>Completed</status>
+
+  <user_story>
+    <as_a>user with disabilities</as_a>
+    <i_want>the AI Buddy application to be accessible and navigable using assistive technologies</i_want>
+    <so_that>I can effectively use the tool to study without barriers.</so_that>
+  </user_story>
+
+  <scope>
+    <included_flows>
+      <flow>Global UI: Navigation, Footer, Layout, Colors, Focus states</flow>
+      <flow>Authentication: Login and Registration forms</flow>
+      <flow>Dashboard: Main layout, File upload dropzone</flow>
+      <flow>Learning Interface: Flashcards (flip mechanism), Quiz (selection, feedback)</flow>
+    </included_flows>
+    <out_of_scope>
+      <item>Administrative interfaces</item>
+      <item>PDF document accessibility (user content)</item>
+    </out_of_scope>
+  </scope>
+
+  <functional_requirements>
+    <fr id="FR 7.1.1">Contrast ratio &gt;= 4.5:1 (normal text) and &gt;= 3:1 (large text).</fr>
+    <fr id="FR 7.1.2">Keyboard navigability for all interactive elements.</fr>
+    <fr id="FR 7.1.3">Visible focus indicator for all interactive elements.</fr>
+    <fr id="FR 7.1.4">Programmatic labels for all form inputs.</fr>
+    <fr id="FR 7.1.5">Dynamic content changes announced via aria-live.</fr>
+    <fr id="FR 7.1.6">Appropriate alt text for images.</fr>
+  </functional_requirements>
+
+  <technical_constraints>
+    <constraint>Standard: WCAG 2.1 Level AA</constraint>
+    <constraint>Tooling: axe-core (via Playwright) + Manual Testing</constraint>
+    <constraint>Framework: Next.js (React), Tailwind CSS</constraint>
+  </technical_constraints>
+
+  <acceptance_criteria>
+    <ac id="AC 1">Automated Audit Pass: 0 critical/serious violations in axe-core scans.</ac>
+    <ac id="AC 2">Keyboard Navigation: Full flow navigable using only Tab, Enter, Space, Esc.</ac>
+    <ac id="AC 3">Screen Reader Support: Labels and errors announced correctly.</ac>
+    <ac id="AC 4">Interactive Components: Flashcard content and Quiz feedback accessible.</ac>
+  </acceptance_criteria>
+
+  <task_breakdown>
+    <task id="T1" status="Completed">Automated Accessibility Testing Setup (@axe-core/playwright)</task>
+    <task id="T2" status="Completed">Global Accessibility Audit & Base Fixes (Colors, Focus, Layout)</task>
+    <task id="T3" status="Completed">Auth & Onboarding Flow Accessibility</task>
+    <task id="T4" status="Completed">Dashboard & File Upload Accessibility</task>
+    <task id="T5" status="Completed">Learning Interface Accessibility (Critical)</task>
+    <task id="T6" status="Completed">Final Verification (Manual & CI)</task>
+  </task_breakdown>
+
+  <definition_of_done>
+    <item>Code merged to main.</item>
+    <item>tests/e2e/a11y.spec.ts passes in CI.</item>
+    <item>Manual validation checklist completed.</item>
+  </definition_of_done>
+</story_context>

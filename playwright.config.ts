@@ -55,4 +55,11 @@ export default defineConfig({
   ],
 
   outputDir: 'test-results/artifacts',
+
+  webServer: {
+    command: 'cd frontend && npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });

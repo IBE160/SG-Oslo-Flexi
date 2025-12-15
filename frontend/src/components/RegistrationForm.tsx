@@ -43,27 +43,29 @@ export default function RegistrationForm() {
       <h2 className="text-xl font-bold">Register</h2>
       {error && <div className="text-red-500 text-sm">{error}</div>}
       <div>
-        <label className="block text-sm font-medium">Email</label>
+        <label htmlFor="email" className="block text-sm font-medium">Email</label>
         <input
+          id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="mt-1 block w-full border border-gray-300 rounded p-2"
+          className="mt-1 block w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium">Password</label>
+        <label htmlFor="password" className="block text-sm font-medium">Password</label>
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={8}
-          className="mt-1 block w-full border border-gray-300 rounded p-2"
+          className="mt-1 block w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
         />
       </div>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">
+      <button type="submit" className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition-colors">
         Register
       </button>
     </form>
