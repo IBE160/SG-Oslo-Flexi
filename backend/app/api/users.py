@@ -7,6 +7,9 @@ from app.schemas.user import UserCreate, UserResponseWrapper, UserResponse
 from app.services import user as user_service
 from app.models.user import User
 from app.api.deps import get_current_user
+from app.schemas.quiz_history import QuizHistoryItem
+from app.schemas.progress_summary import ProgressSummaryResponse
+from typing import List
 
 router = APIRouter()
 
@@ -42,7 +45,41 @@ async def complete_onboarding(
     return current_user
 
 @router.get("/me", response_model=UserResponse, status_code=status.HTTP_200_OK)
+
 async def read_users_me(
+
     current_user: Annotated[User, Depends(get_current_user)]
+
 ):
+
     return current_user
+
+
+
+@router.get("/me/quiz-history", response_model=List[QuizHistoryItem], status_code=status.HTTP_200_OK)
+
+async def get_quiz_history(
+
+    current_user: Annotated[User, Depends(get_current_user)],
+
+    db: AsyncSession = Depends(get_db)
+
+):
+
+    """
+
+    Retrieve the quiz history for the current user.
+
+    """
+
+    return await user_service.get_user_quiz_history(db, current_user.id)
+
+@router.get("/me/progress-summary", response_model=ProgressSummaryResponse, status_code=status.HTTP_200_OK)
+async def get_progress_summary(
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Retrieve the progress summary for the current user.
+    """
+    return await user_service.get_user_progress_summary(db, current_user.id)
