@@ -63,7 +63,7 @@ export default function RegistrationForm() {
           className="mt-1 block w-full border border-gray-300 rounded p-2"
         />
       </div>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">
+      <button type="submit" className="bg-blue-700 text-white p-2 rounded hover:bg-blue-800 transition-colors">
         Register
       </button>
     </form>

@@ -33,7 +33,7 @@ export const SummaryDisplay = ({ sessionId }: SummaryDisplayProps) => {
       <button 
         onClick={handleGenerateSummary} 
         disabled={isLoading}
-        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+        className="w-full px-4 py-2 text-white bg-blue-700 rounded-md hover:bg-blue-800 disabled:bg-gray-400"
       >
         {isLoading ? "Generating..." : "Generate Summary"}
       </button>
