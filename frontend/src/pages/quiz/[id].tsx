@@ -4,13 +4,23 @@ import axios from 'axios';
 
 import Question from '../../components/Question';
 
+interface QuestionData {
+    id: string;
+    question: string;
+    options: string[];
+}
+
+interface QuizData {
+    title: string;
+    questions: QuestionData[];
+}
 
 const QuizPage = () => {
     const router = useRouter();
     const { id } = router.query;
-    const [quiz, setQuiz] = useState<any>(null);
+    const [quiz, setQuiz] = useState<QuizData | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [userAnswers, setUserAnswers] = useState<any>({});
+    const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -21,14 +31,14 @@ const QuizPage = () => {
                     setQuiz(response.data);
                     setLoading(false);
                 })
-                .catch(err => {
+                .catch(() => {
                     setError('Failed to load quiz. Please try again later.');
                     setLoading(false);
                 });
         }
     }, [id]);
 
-    const handleOptionChange = (questionId: any, option: any) => {
+    const handleOptionChange = (questionId: string, option: string) => {
         setUserAnswers({ ...userAnswers, [questionId]: option });
     };
 
@@ -61,7 +71,7 @@ const QuizPage = () => {
                     question={currentQuestion.question}
                     options={currentQuestion.options}
                     selectedOption={userAnswers[currentQuestion.id]}
-                    onOptionChange={(option: any) => handleOptionChange(currentQuestion.id, option)}
+                    onOptionChange={(option) => handleOptionChange(currentQuestion.id, option)}
                 />
                 <div className="flex justify-between mt-6">
                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">

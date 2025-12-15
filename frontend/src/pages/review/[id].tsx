@@ -21,7 +21,7 @@ const FlashcardReviewPage = () => {
                 setFlashcards(response.data);
                 setLoading(false);
             })
-            .catch(err => {
+            .catch(() => {
                 setError('Failed to load flashcards. Please try again later.');
                 setLoading(false);
             });

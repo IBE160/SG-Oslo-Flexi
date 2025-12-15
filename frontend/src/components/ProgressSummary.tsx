@@ -17,11 +17,10 @@ const ProgressSummary = () => {
                 setSummary(response.data);
                 setLoading(false);
             })
-            .catch(err => {
-                setError('Failed to load progress summary.');
-                setLoading(false);
-            });
-    }, []);
+                  .catch(() => {
+                    setError('Failed to load progress summary.');
+                    setLoading(false);
+                  });    }, []);
 
     if (loading) return <div>Loading progress...</div>;
     if (error) return <div className="text-red-500">{error}</div>;

@@ -2,10 +2,24 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+interface QuizResultQuestion {
+    id: string;
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+}
+
+interface QuizResultData {
+    score: number;
+    totalQuestions: number;
+    questions: QuizResultQuestion[];
+}
+
 const QuizResultsPage = () => {
     const router = useRouter();
     const { id, answers } = router.query;
-    const [results, setResults] = useState<any>(null);
+    const [results, setResults] = useState<QuizResultData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +33,7 @@ const QuizResultsPage = () => {
                     setResults(response.data);
                     setLoading(false);
                 })
-                .catch(err => {
+                .catch(() => {
                     setError('Failed to submit quiz results.');
                     setLoading(false);
                 });
@@ -36,7 +50,7 @@ const QuizResultsPage = () => {
             <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">You scored {results.score} out of {results.totalQuestions}</h2>
                 <div>
-                    {results.questions.map((q: any) => (
+                    {results.questions.map((q) => (
                         <div key={q.id} className="mb-4">
                             <p className="font-semibold">{q.question}</p>
                             <p className={q.isCorrect ? 'text-green-500' : 'text-red-500'}>

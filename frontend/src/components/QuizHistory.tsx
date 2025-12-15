@@ -18,11 +18,10 @@ const QuizHistory = () => {
                 setHistory(response.data);
                 setLoading(false);
             })
-            .catch(err => {
-                setError('Failed to load quiz history.');
-                setLoading(false);
-            });
-    }, []);
+                  .catch(() => {
+                    setError('Failed to load quiz history.');
+                    setLoading(false);
+                  });    }, []);
 
     if (loading) return <div>Loading quiz history...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
