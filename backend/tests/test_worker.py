@@ -1,7 +1,9 @@
-import sys
-print(sys.path)
-from app import worker
-
+import pytest
+from redis import Redis
+from rq_scheduler import Scheduler
+from app.core.config import settings
+import worker
+from worker import schedule_jobs
 
 @pytest.fixture
 def scheduler():
@@ -28,5 +30,6 @@ def test_schedule_cleanup_job(scheduler: Scheduler):
 
     # Check that the scheduled job is the cleanup job
     job = jobs[0]
-    assert job.func_name == "app.worker.cleanup_old_documents"
+    # The function is in the 'worker' module, so the name should be 'worker.cleanup_old_documents'
+    assert job.func_name == "worker.cleanup_old_documents"
     assert job.meta["interval"] == 60 * 60 * 24
