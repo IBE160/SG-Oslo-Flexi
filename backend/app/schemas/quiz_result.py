@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-import uuid
-from typing import List, Dict
+from typing import List
 
 class QuestionResult(BaseModel):
     id: int

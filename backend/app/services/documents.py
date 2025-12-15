@@ -2,7 +2,6 @@ from typing import List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.document import Document, DocumentStatus
-from app.models.flashcard import Flashcard
 from app.schemas.document import DocumentCreate
 from uuid import UUID
 from fastapi import HTTPException, status
