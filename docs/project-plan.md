@@ -89,3 +89,9 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 6.2: Basic Progress Dashboard
 - [x] Epic 7: Quality Assurance & UX Excellence
   - [x] Story 7.1: Accessibility Compliance (WCAG 2.1 AA)
+
+## Fase 6: Closure & Submission
+
+- [x] /run-agent-task sm *sprint-planning "Plan a final wrap-up sprint for Project Closure"
+- [ ] /run-agent-task sm *closure "Execute closure tasks (Merge, QA, Docs)"
+- [ ] /run-agent-task sm *release "Tag and package the release"
