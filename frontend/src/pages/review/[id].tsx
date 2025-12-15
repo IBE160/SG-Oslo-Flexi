@@ -75,7 +75,7 @@ const FlashcardReviewPage = () => {
             </button>
             <button
                 onClick={handleNextCard}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
             >
                 Next
             </button>

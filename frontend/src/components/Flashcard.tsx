@@ -7,12 +7,14 @@ interface FlashcardProps {
 
 const Flashcard: React.FC<FlashcardProps> = ({ question, answer, flipped, onFlip }) => {
   return (
-    <div
+    <button
+      type="button"
       onClick={onFlip}
-      className="cursor-pointer p-6 rounded-lg shadow-lg bg-white min-h-[200px] flex items-center justify-center"
+      aria-pressed={flipped}
+      className="p-6 rounded-lg shadow-lg bg-white min-h-[200px] flex items-center justify-center w-full text-left"
     >
       <p className="text-xl">{flipped ? answer : question}</p>
-    </div>
+    </button>
   );
 };
 
