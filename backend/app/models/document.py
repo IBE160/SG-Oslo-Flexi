@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Integer, Enum, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -24,5 +25,8 @@ class Document(Base):
     extracted_text = Column(String, nullable=True)
     summary = Column(String, nullable=True)
     
+    flashcards = relationship("Flashcard", back_populates="document", cascade="all, delete-orphan")
+    quiz = relationship("Quiz", uselist=False, back_populates="document", cascade="all, delete-orphan")
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), server_default=func.now())
