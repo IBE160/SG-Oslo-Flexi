@@ -1,4 +1,3 @@
-import pytest
 import worker
 from worker import schedule_jobs
 
