@@ -1,26 +1,10 @@
-<testsuites id="" name="" tests="12" failures="0" skipped="3" errors="0" time="13.023665000000001">
-<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:01:36.787Z" hostname="chromium" tests="4" failures="0" skipped="1" time="2.247" errors="0">
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="0.747">
+<testsuites id="" name="" tests="30" failures="12" skipped="3" errors="0" time="33.088044000000004">
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="chromium" tests="4" failures="0" skipped="1" time="6.824" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="1.235">
 </testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="0.78">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="2.846">
 </testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="0.72">
-</testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
-<properties>
-<property name="skip" value="">
-</property>
-</properties>
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:01:36.787Z" hostname="firefox" tests="4" failures="0" skipped="1" time="2.55" errors="0">
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="1.251">
-</testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="0.656">
-</testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="0.643">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="2.743">
 </testcase>
 <testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
 <properties>
@@ -31,12 +15,193 @@
 </skipped>
 </testcase>
 </testsuite>
-<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:01:36.787Z" hostname="webkit" tests="4" failures="0" skipped="1" time="2.412" errors="0">
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="0.812">
+<testsuite name="example.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="chromium" tests="2" failures="0" skipped="0" time="1.431" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="1.05">
 </testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="0.82">
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="0.381">
+<system-out>
+<![CDATA[[Mock] Created user: Jocelyn.Carter33@yahoo.com
+Testing with user: Jocelyn.Carter33@yahoo.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
 </testcase>
-<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="0.78">
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="chromium" tests="1" failures="1" skipped="0" time="17.834" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="17.834">
+<failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
+<![CDATA[  [chromium] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\video.webm]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="chromium" tests="3" failures="3" skipped="0" time="53.072" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="17.694">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ──────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="17.678">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ─────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="17.7">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [chromium] › upload.spec.ts:70:7 › Document Upload › should reject file too large ────────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="firefox" tests="4" failures="0" skipped="1" time="8.912" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="2.937">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="3.066">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="2.909">
 </testcase>
 <testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
 <properties>
@@ -45,6 +210,384 @@
 </properties>
 <skipped>
 </skipped>
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="firefox" tests="2" failures="0" skipped="0" time="3.752" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="1.916">
+</testcase>
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="1.836">
+<system-out>
+<![CDATA[[Mock] Created user: Mason_Nitzsche-Funk@gmail.com
+Testing with user: Mason_Nitzsche-Funk@gmail.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="firefox" tests="1" failures="1" skipped="0" time="16.984" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="16.984">
+<failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
+<![CDATA[  [firefox] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\video.webm]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="firefox" tests="3" failures="3" skipped="0" time="53.898" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="17.773">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ───────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="18.097">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ──────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="18.028">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [firefox] › upload.spec.ts:70:7 › Document Upload › should reject file too large ─────────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="a11y.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="webkit" tests="4" failures="0" skipped="1" time="6.008" errors="0">
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Landing Page" classname="a11y.spec.ts" time="2.144">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Login Page" classname="a11y.spec.ts" time="1.931">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Register Page" classname="a11y.spec.ts" time="1.933">
+</testcase>
+<testcase name="Accessibility Smoke Tests › should pass a11y checks on Dashboard (after login)" classname="a11y.spec.ts" time="0">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="example.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="webkit" tests="2" failures="0" skipped="0" time="1.536" errors="0">
+<testcase name="Example Test Suite › should load homepage" classname="example.spec.ts" time="1.025">
+</testcase>
+<testcase name="Example Test Suite › should create user and login" classname="example.spec.ts" time="0.511">
+<system-out>
+<![CDATA[[Mock] Created user: Gage.Murray@yahoo.com
+Testing with user: Gage.Murray@yahoo.com
+[Mock] Cleaning up 1 users...
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="test_document_deletion.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="webkit" tests="1" failures="1" skipped="0" time="15.859" errors="0">
+<testcase name="Document Deletion › should allow a user to upload and then delete a document" classname="test_document_deletion.spec.ts" time="15.859">
+<failure message="test_document_deletion.spec.ts:4:7 should allow a user to upload and then delete a document" type="FAILURE">
+<![CDATA[  [webkit] › test_document_deletion.spec.ts:4:7 › Document Deletion › should allow a user to upload and then delete a document 
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // 1. Login
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'test@example.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'password');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await expect(page).toHaveURL('/dashboard');
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\test_document_deletion.spec.ts:7:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\video.webm]]
+
+[[ATTACHMENT|artifacts\test_document_deletion-Doc-64bf6--and-then-delete-a-document-webkit\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="upload.spec.ts" timestamp="2025-12-15T20:24:00.833Z" hostname="webkit" tests="3" failures="3" skipped="0" time="50.659" errors="0">
+<testcase name="Document Upload › should upload a valid PDF document" classname="upload.spec.ts" time="16.787">
+<failure message="upload.spec.ts:12:7 should upload a valid PDF document" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:12:7 › Document Upload › should upload a valid PDF document ────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-upload-a-valid-PDF-document-webkit\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject invalid file type" classname="upload.spec.ts" time="17.244">
+<failure message="upload.spec.ts:40:7 should reject invalid file type" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:40:7 › Document Upload › should reject invalid file type ───────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-invalid-file-type-webkit\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Document Upload › should reject file too large" classname="upload.spec.ts" time="16.628">
+<failure message="upload.spec.ts:70:7 should reject file too large" type="FAILURE">
+<![CDATA[  [webkit] › upload.spec.ts:70:7 › Document Upload › should reject file too large ──────────────────
+
+    TimeoutError: page.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       at ..\support\helpers\UserHelper.ts:24
+
+      22 |     // 2. Login via UI to set NextAuth session
+      23 |     await this.page.goto('/login');
+    > 24 |     await this.page.fill('input[name="email"]', email);
+         |                     ^
+      25 |     await this.page.fill('input[name="password"]', password);
+      26 |     await this.page.click('button[type="submit"]');
+      27 |     
+        at UserHelper.createAndLoginUser (C:\Users\davor\SG-Oslo-Flexi\tests\support\helpers\UserHelper.ts:24:21)
+        at C:\Users\davor\SG-Oslo-Flexi\tests\e2e\upload.spec.ts:9:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\test-failed-1.png]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\video.webm]]
+
+[[ATTACHMENT|artifacts\upload-Document-Upload-should-reject-file-too-large-webkit\error-context.md]]
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

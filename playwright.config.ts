@@ -56,10 +56,28 @@ export default defineConfig({
 
   outputDir: 'test-results/artifacts',
 
-  webServer: {
-    command: 'cd frontend && npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: [
+    {
+      command: 'cd frontend && npm run dev',
+      url: 'http://localhost:3000',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+      env: {
+        ...process.env,
+        NEXT_PUBLIC_API_URL: 'http://127.0.0.1:8000',
+        NEXTAUTH_URL: 'http://localhost:3000',
+        NEXTAUTH_SECRET: 'supersecret',
+      },
+    },
+    {
+      command: 'set DATABASE_URL=sqlite+aiosqlite:///./test.db && cd backend && .\\.venv\\Scripts\\python.exe -m alembic upgrade head && .\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --port 8000',
+      url: 'http://127.0.0.1:8000',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+      env: {
+        DATABASE_URL: 'sqlite+aiosqlite:///./test.db',
+        ...process.env,
+      }
+    }
+  ],
 });

@@ -21,7 +21,8 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.add_column('users', sa.Column('is_onboarded', sa.Boolean(), nullable=True))
     op.execute("UPDATE users SET is_onboarded = false")
-    op.alter_column('users', 'is_onboarded', nullable=False)
+    with op.batch_alter_table('users') as batch_op:
+        batch_op.alter_column('is_onboarded', nullable=False)
 
 
 def downgrade() -> None:

@@ -15,7 +15,7 @@ export class UserHelper {
     const password = 'password123';
 
     // 1. Register via API
-    await this.page.request.post('http://localhost:8000/api/v1/users/register', {
+    await this.page.request.post('http://127.0.0.1:8000/api/v1/users/register', {
       data: { email, password }
     });
 

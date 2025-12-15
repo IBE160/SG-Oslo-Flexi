@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Uuid as UUID
 from app.db.base import Base
 
 class QuizResult(Base):
