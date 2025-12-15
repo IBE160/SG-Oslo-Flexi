@@ -93,5 +93,6 @@ This project plan is adapted from the IBE160 course example to track the progres
 ## Fase 6: Closure & Submission
 
 - [x] /run-agent-task sm *sprint-planning "Plan a final wrap-up sprint for Project Closure"
-- [ ] /run-agent-task sm *closure "Execute closure tasks (Merge, QA, Docs)"
-- [ ] /run-agent-task sm *release "Tag and package the release"
+- [x] /run-agent-task sm *closure "Execute closure tasks (Merge, QA, Docs)"
+- [x] /run-agent-task sm *release "Tag and package the release"
+- [x] /run-agent-task sm *retrospective "Project Closure Retrospective" ([docs/retrospective-project-closure.md](./retrospective-project-closure.md))
