@@ -5,9 +5,9 @@ import axios from 'axios';
 const QuizResultsPage = () => {
     const router = useRouter();
     const { id, answers } = router.query;
-    const [results, setResults] = useState(null);
+    const [results, setResults] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (id && answers) {
@@ -36,7 +36,7 @@ const QuizResultsPage = () => {
             <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">You scored {results.score} out of {results.totalQuestions}</h2>
                 <div>
-                    {results.questions.map(q => (
+                    {results.questions.map((q: any) => (
                         <div key={q.id} className="mb-4">
                             <p className="font-semibold">{q.question}</p>
                             <p className={q.isCorrect ? 'text-green-500' : 'text-red-500'}>

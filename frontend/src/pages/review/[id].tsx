@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-import Flashcard from '../../../components/Flashcard';
+import Flashcard from '../../components/Flashcard';
 
 import axios from 'axios';
 

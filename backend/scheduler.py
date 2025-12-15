@@ -1,6 +1,6 @@
 from redis import Redis
 from rq_scheduler.scheduler import Scheduler
-from datetime import datetime, timedelta
+from datetime import datetime
 from app.services.documents import DocumentService
 from app.db.session import SessionLocal
 import asyncio

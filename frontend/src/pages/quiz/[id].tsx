@@ -2,17 +2,17 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import Question from '../../../components/Question';
+import Question from '../../components/Question';
 
 
 const QuizPage = () => {
     const router = useRouter();
     const { id } = router.query;
-    const [quiz, setQuiz] = useState(null);
+    const [quiz, setQuiz] = useState<any>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [userAnswers, setUserAnswers] = useState({});
+    const [userAnswers, setUserAnswers] = useState<any>({});
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (id) {
@@ -28,12 +28,14 @@ const QuizPage = () => {
         }
     }, [id]);
 
-    const handleOptionChange = (questionId, option) => {
+    const handleOptionChange = (questionId: any, option: any) => {
         setUserAnswers({ ...userAnswers, [questionId]: option });
     };
 
     const handleNextQuestion = () => {
-        setCurrentQuestionIndex(prev => Math.min(prev + 1, quiz.questions.length - 1));
+        if (quiz) {
+            setCurrentQuestionIndex(prev => Math.min(prev + 1, quiz.questions.length - 1));
+        }
     };
 
     const handlePrevQuestion = () => {
@@ -59,7 +61,7 @@ const QuizPage = () => {
                     question={currentQuestion.question}
                     options={currentQuestion.options}
                     selectedOption={userAnswers[currentQuestion.id]}
-                    onOptionChange={(option) => handleOptionChange(currentQuestion.id, option)}
+                    onOptionChange={(option: any) => handleOptionChange(currentQuestion.id, option)}
                 />
                 <div className="flex justify-between mt-6">
                     <button onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50">
