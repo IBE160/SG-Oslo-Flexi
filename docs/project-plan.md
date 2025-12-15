@@ -84,8 +84,8 @@ This project plan is adapted from the IBE160 course example to track the progres
   - [x] Story 5.1: Flashcard Review
   - [x] Story 5.2: Quiz Interface
   - [x] Story 5.3: Quiz Results
-- [ ] Epic 6: Basic Progress Tracking
-  - [ ] Story 6.1: Quiz History
-  - [ ] Story 6.2: Basic Progress Dashboard
+- [x] Epic 6: Basic Progress Tracking
+  - [x] Story 6.1: Quiz History
+  - [x] Story 6.2: Basic Progress Dashboard
 - [ ] Epic 7: Quality Assurance & UX Excellence
   - [ ] Story 7.1: Accessibility Compliance (WCAG 2.1 AA)

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import OnboardingWizard from "@/components/OnboardingWizard";
 import { FileUpload } from "@/components/documents/FileUpload";
 import { DocumentList } from "@/components/documents/DocumentList";
+import QuizHistory from "@/components/QuizHistory";
+import ProgressSummary from "@/components/ProgressSummary";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -46,6 +48,11 @@ export default function Dashboard() {
           </button>
         </div>
         
+        {/* Progress Summary */}
+        <div className="mb-8">
+          <ProgressSummary />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Upload */}
           <div className="lg:col-span-1">
@@ -62,6 +69,11 @@ export default function Dashboard() {
                 <DocumentList refreshTrigger={refreshTrigger} />
              </div>
           </div>
+        </div>
+
+        {/* New Row for Quiz History */}
+        <div className="mt-8">
+            <QuizHistory />
         </div>
       </div>
     </div>
