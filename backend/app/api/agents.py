@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from app.schemas.orchestrator import ConversationContext
 from app.services.coach_agent import CoachAgent
 

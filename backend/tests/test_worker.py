@@ -2,7 +2,6 @@ import pytest
 from redis import Redis
 from rq_scheduler import Scheduler
 from app.core.config import settings
-import worker
 from worker import schedule_jobs
 
 @pytest.fixture
